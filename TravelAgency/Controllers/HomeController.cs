@@ -11,15 +11,21 @@ namespace TravelAgency.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> _logger; 
+        private readonly TravelAgencyContext dbContext;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            if (dbContext == null) dbContext = new TravelAgencyContext();
         }
 
         public IActionResult Index()
         {
+            // Dummy method for checking whether connection actually works.
+            var user = dbContext.Users.SingleOrDefault();
+            var name = user.FirstName;
+            ViewData["name"] = name;
             return View();
         }
 
@@ -31,7 +37,7 @@ namespace TravelAgency.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
