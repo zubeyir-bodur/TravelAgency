@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TravelAgencyDTO
 {
-    public class UserInfo
+    public class LoginInfo
     {
         
         public string username { get; set; }

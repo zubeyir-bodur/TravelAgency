@@ -704,7 +704,9 @@ namespace TravelAgencyEntity
                     .ValueGeneratedNever()
                     .HasColumnName("u_id");
 
-                entity.Property(e => e.Age).HasColumnName("age");
+                entity.Property(e => e.BirthDate)
+                    .HasColumnType("date")
+                    .HasColumnName("birth_date");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(255)

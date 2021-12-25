@@ -64,8 +64,9 @@
         $(document).ready(() => {
             var userJSON = localStorage.getItem('userInfo');
             if (userJSON != null) {
+                // now retrived user data, can use it
                 var user = JSON.parse(userJSON);
-                $('#msg').text("Welcome " + user.firstName + " !");
+                $('#msg').text("Welcome " + user.type + " " +  user.firstName + " !");
             }
         });
       </script>
