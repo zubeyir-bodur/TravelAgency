@@ -9,6 +9,8 @@
     <title>Sign-Up</title>
     <link rel="stylesheet" href="css/nicepage.css" media="screen">
     <link rel="stylesheet" href="css/Sign-Up.css" media="screen">
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script class="u-script" type="text/javascript" src="js/jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="js/nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 4.2.6, nicepage.com">
@@ -31,56 +33,68 @@
             <div class="u-align-left u-container-style u-grey-5 u-group u-group-1">
                 <div class="u-container-layout u-container-layout-1">
                     <div class="u-form u-form-1">
-                        <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style="padding: 10px;">
-                            <div class="u-form-group u-form-name u-form-group-1">
-                                <label for="name-4628" class="u-form-control-hidden u-label"></label>
-                                <input type="text" placeholder="Enter your name" id="name-4628" name="name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
+                        <form id="signup-form" class="form" style="padding: 10px;">
+                            <h3 class="text-center">Sign Up</h3>
+                            <div class="u-form-group u-form-name u-form-group-1" style="padding: 10px;">
+                                <label for="firstName" class="u-form-control-hidden u-label"></label>
+                                <input type="text" placeholder="First Name" id="firstName" name="firstName" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
                             </div>
-                            <div class="u-form-group u-form-phone u-form-group-2">
-                                <label for="phone-82f5" class="u-form-control-hidden u-label"></label>
-                                <input type="tel" pattern="\+?\d{0,3}[\s\(\-]?([0-9]{2,3})[\s\)\-]?([\s\-]?)([0-9]{3})[\s\-]?([0-9]{2})[\s\-]?([0-9]{2})" placeholder="Enter your phone (e.g. +14155552675)" id="phone-82f5" name="phone" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
+                            <div class="u-form-group u-form-name u-form-group-2" style="padding: 10px;">
+                                <label for="lastName" class="u-form-control-hidden u-label"></label>
+                                <input type="text" placeholder="Last Name" id="lastName" name="lastName" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
                             </div>
-                            <div class="u-form-date u-form-group u-form-group-3">
-                                <label for="date-480b" class="u-form-control-hidden u-label"></label>
-                                <input type="date" placeholder="MM/DD/YYYY" id="date-480b" name="date" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
+                            <div class="u-form-group u-form-name u-form-group-3" style="padding: 10px;">
+                                <label for="email" class="u-form-control-hidden u-label"></label>
+                                <input type="email" pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$" placeholder="E-mail (e.g. example@domain.address)" id="email" name="email" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
                             </div>
-                            <div class="u-form-group u-form-group-4">
-                                <label for="text-478b" class="u-form-control-hidden u-label"></label>
-                                <input type="text" placeholder="Enter password" id="text-478b" name="password" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white">
+                            <div class="u-form-group u-form-phone u-form-group-4" style="padding: 10px;">
+                                <label for="phoneNumber" class="u-form-control-hidden u-label"></label>
+                                <input type="tel" pattern="\+?\d{0,3}[\s\(\-]?([0-9]{2,3})[\s\)\-]?([\s\-]?)([0-9]{3})[\s\-]?([0-9]{2})[\s\-]?([0-9]{2})" placeholder="Phone Number (e.g. +14155552675)" id="phoneNumber" name="phoneNumber" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
                             </div>
-                            <div class="u-form-group u-form-group-5">
-                                <label for="text-3686" class="u-form-control-hidden u-label"></label>
-                                <input type="text" placeholder="Confirm password" id="text-3686" name="confirmPassword" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white">
+                            <div class="u-form-date u-form-group u-form-group-5" style="padding: 10px;">
+                                <label for="birthDate" class="u-form-control u-label">Birth Date</label>
+                                <input type="date" id="birthDate" name="birthDate" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
                             </div>
-                            <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-6">
-                                <div class="u-form-radio-button-wrapper">
-                                    <input type="radio" name="radiobuttonCustomer" value="Customer">
-                                    <label class="u-label" for="radiobutton">Customer</label>
-                                    <br>
+                            <div class="u-form-group u-form-name u-form-group-6" style="padding: 10px;">
+                                <label for="username" class="u-form-control-hidden u-label"></label>
+                                <input type="text" placeholder="Username" id="username" name="username" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-group-7" style="padding: 10px;">
+                                <label for="password" class="u-form-control-hidden u-label"></label>
+                                <input type="password" placeholder="Enter password" id="password" name="password" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-group-8" style="padding: 10px;">
+                                <label for="confirmPassword" class="u-form-control-hidden u-label"></label>
+                                <input type="password" placeholder="Confirm password" id="confirmPassword" name="confirmPassword" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div id="error-id" style="display: none; color:red;"></div>
+                            <div style="display:flex; padding:10px;">
+                                <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-9" style="margin-right:10px;">
+                                    <div class="u-form-radio-button-wrapper">
+                                        <input type="radio" name="radioButton" id="isCustomer" value="Customer">
+                                        <label class="u-label" for="isCustomer">Customer</label>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-9" style="margin-right:10px;">
+                                    <div class="u-form-radio-button-wrapper">
+                                        <input type="radio" name="radioButton" id="isGuide" value="Guide">
+                                        <label class="u-label" for="isGuide">Guide</label>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-9" style="margin-right:10px;">
+                                    <div class="u-form-radio-button-wrapper">
+                                        <input type="radio" name="radioButton" id="isAgent" value="Agent">
+                                        <label class="u-label" for="isAgent">Agent</label>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top:10px;">
+                                    <input id="signup-btn" type="submit" name="submit" value="Sign Up" class="u-btn u-button-style">
                                 </div>
                             </div>
-                            <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-7">
-                                <div class="u-form-radio-button-wrapper">
-                                    <input type="radio" name="radiobuttonGuide" value="Guide">
-                                    <label class="u-label" for="radiobutton-1">Guide</label>
-                                    <br>
-                                </div>
-                            </div>
-                            <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-8">
-                                <div class="u-form-radio-button-wrapper">
-                                    <input type="radio" name="radiobuttonAgent" value="Agent">
-                                    <label class="u-label" for="radiobutton-2">Agent</label>
-                                    <br>
-                                </div>
-                            </div>
-                            <div class="u-align-center u-form-group u-form-submit">
-                                <a href="#" class="u-btn u-btn-submit u-button-style">Submit</a>
-                                <input type="submit" value="submit" class="u-form-control-hidden">
-                            </div>
-                            <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                            <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                            <input type="hidden" value="" name="recaptchaResponse">
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -104,3 +118,73 @@
 </html>
 <script src="js/request.js"></script>
 <script src="lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(() => {
+        $('#signup-form').submit((e) => {
+            e.preventDefault();
+            $("#error-id").css('display', 'hidden');
+            $('#error-id').text('');
+            var userType = "";
+            if ($('#isCustomer')[0].checked) {
+                userType = "customer";
+            }
+            else if ($('#isGuide')[0].checked) {
+                userType = "guide";
+            }
+            else if ($('#isAgent')[0].checked) {
+                userType = "agent";
+            }
+            var registerInfo = {
+                firstName: $('#firstName').val(),
+                lastName: $('#lastName').val(),
+                email: $('#email').val(),
+                phoneNumber: $('#phoneNumber').val(),
+                username: $('#username').val(),
+                password: $('#password').val(),
+                birthDate: $('#birthDate').val(),
+                type: userType
+            };
+            if (registerInfo.username === ""
+                || registerInfo.password === ""
+                || registerInfo.firstName === ""
+                || registerInfo.email === ""
+                || registerInfo.phoneNumber === ""
+                || registerInfo.lastName === ""
+                || registerInfo.birthDate === ""
+                || registerInfo.type === "") {
+                return;
+            }
+            if ( !( $('#password').val() === $('#confirmPassword').val() ) ) {
+                $("#error-id").css('display', 'block');
+                $('#error-id').text('Passwords must match');
+                return;
+            }
+            var response = AjaxPost(registerInfo, "account", "signup");
+            if (!response.hasError) {
+                console.log(response.data);
+                // Open modal for successful sign up
+            }
+            else if (response != null) {
+                $("#error-id").css('display', 'block');
+                $('#error-id').text(response.errorMessage);
+            }
+        });
+
+        $("#signup-btn").click((e) => {
+        });
+
+        // Execute a function when the user releases enter key
+        var arr = $('.u-input');
+        Array.prototype.forEach.call(arr, i => {
+            i.addEventListener("keyup", function (event) {
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    $("#login-btn").click();
+                }
+            });
+        });
+    });
+</script>

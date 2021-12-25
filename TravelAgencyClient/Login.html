@@ -39,7 +39,7 @@
 
                     <div class="u-expanded-width u-login-control" style="padding:10px;">
                         <form id="login-form" class="form">
-                            <h3 class="text-center">User Log In</h3>
+                            <h3 class="text-center">Log In</h3>
                             <div class="u-form-group u-form-name" style="padding:10px;">
                                 <input type="text" placeholder="Enter your Username" name="username" id="username-5b0a" class="u-border-2 u-border-white u-input u-input-rectangle u-radius-43 u-white form-control" required>
                             </div>
@@ -119,14 +119,17 @@
         });
 
         // Execute a function when the user releases enter key
-        $('u-input').addEventListener("keyup", function (event) {
-            // Number 13 is the "Enter" key on the keyboard
-            if (event.keyCode === 13) {
-                // Cancel the default action, if needed
-                event.preventDefault();
-                // Trigger the button element with a click
-                $("#login-btn").click();
-            }
-        });
+        var arr = $('.u-input');
+        Array.prototype.forEach.call(arr, i => {
+            i.addEventListener("keyup", function (event) {
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    $("#login-btn").click();
+                }
+            });
+        });  
     });
 </script>

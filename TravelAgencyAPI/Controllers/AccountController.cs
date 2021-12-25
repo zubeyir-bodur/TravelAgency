@@ -166,6 +166,9 @@ namespace TravelAgencyAPI.Controllers
                         return Ok(response);
 
                 }
+                var maxId = dbContext.Users.Max(table => table.UId);
+                var newId = maxId + 1;
+                user.UId = newId;
                 dbContext.Add<User>(user).State = EntityState.Added;
                 dbContext.SaveChanges();
 
