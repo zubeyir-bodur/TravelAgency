@@ -37,23 +37,52 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Home.html" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Tours.html" style="padding: 10px 20px;">Tours</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Guides</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Reservations</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review</a>
-</li></ul>
+              <ul class="u-nav u-unstyled u-nav-1">
+                  <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Home.html" style="padding: 10px 20px;">Home</a>
+                  </li>
+                  <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Tours.html" style="padding: 10px 20px;">Tours</a>
+                  </li>
+                  <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Guides</a>
+                  </li>
+                  <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Reservations</a>
+                  </li>
+                  <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review</a>
+                  </li>
+                  <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" id="logout-btn" style="padding: 10px 20px;">Log Out</a>
+                  </li>
+              </ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Home.html" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Tours.html" style="padding: 10px 20px;">Tours</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 10px 20px;">Guides</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 10px 20px;">Reservations</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review</a>
-</li></ul>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                    <li class="u-nav-item">
+                        <a class="u-button-style u-nav-link" href="Home.html" style="padding: 10px 20px;">Home</a>
+                    </li>
+                    <li class="u-nav-item">
+                        <a class="u-button-style u-nav-link" href="Tours.html" style="padding: 10px 20px;">Tours</a>
+                    </li>
+                    <li class="u-nav-item">
+                        <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Guides</a>
+                    </li>
+                    <li class="u-nav-item">
+                        <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Reservations</a>
+                    </li>
+                    <li class="u-nav-item">
+                        <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review</a>
+
+                    </li>
+                    <li class="u-nav-item">
+                        <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
+                    </li>
+                </ul>
               </div>
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
@@ -68,7 +97,16 @@
                 var user = JSON.parse(userJSON);
                 $('#msg').text("Welcome " + user.type + " " +  user.firstName + " !");
             }
+            // basic logout, need to include it in every navbar, or find a better way to do it
+            $('#logout-btn').click((e) => {
+                // set user info JSON string to empty
+                localStorage.setItem('userInfo', "");
+                // redirect to welcome page
+                window.location.replace("https://localhost:44333/index.html");
+            });
         });
+
+
       </script>
     <h1 id="msg" style="text-align:center"></h1>
     
