@@ -60,7 +60,7 @@ namespace TravelAgency.Models
                 // Please change the data source parameter accordingly; the server you have 
                 // exported the backup file. We could use a common online database,
                 // but it would take time to setup.
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=TravelAgency;Integrated Security=True;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Database=TravelAgency;Trusted_Connection=True;");
             }
         }
 
