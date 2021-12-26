@@ -49,6 +49,7 @@ namespace TravelAgencyEntity
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=TravelAgency;Integrated Security=True;MultipleActiveResultSets=True;");
+                //optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Database=TravelAgency;Trusted_Connection=True;");
             }
         }
 
