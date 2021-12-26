@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="page_type" content="np-template-header-footer-from-plugin">
+    <title>Sign-Up</title>
+    <link rel="stylesheet" href="css/nicepage.css" media="screen">
+    <link rel="stylesheet" href="css/Sign-Up.css" media="screen">
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script class="u-script" type="text/javascript" src="js/jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="js/nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 4.2.6, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
+
+
+    <script type="application/ld+json">
+        {
+                "@context": "http://schema.org",
+                "@type": "Organization",
+                "name": ""
+        }</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Sign-Up">
+    <meta property="og:type" content="website">
+</head>
+<body class="u-body">
+    <section class="u-align-left u-clearfix u-section-1" id="sec-c647">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <div class="u-align-left u-container-style u-grey-5 u-group u-group-1">
+                <div class="u-container-layout u-container-layout-1">
+                    <div class="u-form u-form-1">
+                        <form id="signup-form" class="form" style="padding: 10px;">
+                            <h3 class="text-center">Sign Up</h3>
+                            <div class="u-form-group u-form-name u-form-group-1" style="padding: 10px;">
+                                <label for="firstName" class="u-form-control-hidden u-label"></label>
+                                <input type="text" placeholder="First Name" id="firstName" name="firstName" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-name u-form-group-2" style="padding: 10px;">
+                                <label for="lastName" class="u-form-control-hidden u-label"></label>
+                                <input type="text" placeholder="Last Name" id="lastName" name="lastName" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-name u-form-group-3" style="padding: 10px;">
+                                <label for="email" class="u-form-control-hidden u-label"></label>
+                                <input type="email" pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$" placeholder="E-mail (e.g. example@domain.address)" id="email" name="email" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-phone u-form-group-4" style="padding: 10px;">
+                                <label for="phoneNumber" class="u-form-control-hidden u-label"></label>
+                                <input type="tel" pattern="\+?\d{0,3}[\s\(\-]?([0-9]{2,3})[\s\)\-]?([\s\-]?)([0-9]{3})[\s\-]?([0-9]{2})[\s\-]?([0-9]{2})" placeholder="Phone Number (e.g. +14155552675)" id="phoneNumber" name="phoneNumber" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-date u-form-group u-form-group-5" style="padding: 10px;">
+                                <label for="birthDate" class="u-form-control u-label">Birth Date</label>
+                                <input type="date" id="birthDate" name="birthDate" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-name u-form-group-6" style="padding: 10px;">
+                                <label for="username" class="u-form-control-hidden u-label"></label>
+                                <input type="text" placeholder="Username" id="username" name="username" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-group-7" style="padding: 10px;">
+                                <label for="password" class="u-form-control-hidden u-label"></label>
+                                <input type="password" placeholder="Enter password" id="password" name="password" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div class="u-form-group u-form-group-8" style="padding: 10px;">
+                                <label for="confirmPassword" class="u-form-control-hidden u-label"></label>
+                                <input type="password" placeholder="Confirm password" id="confirmPassword" name="confirmPassword" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required>
+                            </div>
+                            <div id="error-id" style="display: none; color:red;"></div>
+                            <div style="display:flex; padding:10px;">
+                                <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-9" style="margin-right:10px;">
+                                    <div class="u-form-radio-button-wrapper">
+                                        <input type="radio" name="radioButton" id="isCustomer" value="Customer">
+                                        <label class="u-label" for="isCustomer">Customer</label>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-9" style="margin-right:10px;">
+                                    <div class="u-form-radio-button-wrapper">
+                                        <input type="radio" name="radioButton" id="isGuide" value="Guide">
+                                        <label class="u-label" for="isGuide">Guide</label>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="u-form-group u-form-partition-factor-3 u-form-radiobutton u-form-group-9" style="margin-right:10px;">
+                                    <div class="u-form-radio-button-wrapper">
+                                        <input type="radio" name="radioButton" id="isAgent" value="Agent">
+                                        <label class="u-label" for="isAgent">Agent</label>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top:10px;">
+                                    <input id="signup-btn" type="submit" name="submit" value="Sign Up" class="u-btn u-button-style">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-3919"><div class="u-align-left u-clearfix u-sheet u-sheet-1"></div></footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+        <a class="u-link" href="https://nicepage.com/website-templates" target="_blank">
+            <span>Website Templates</span>
+        </a>
+        <p class="u-text">
+            <span>created with</span>
+        </p>
+        <a class="u-link" href="" target="_blank">
+            <span>Website Builder Software</span>
+        </a>.
+    </section>
+
+    <div class="modal fade" id="signup-success-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Sign Up Success</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="signup-success-msg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="signup-success-login-btn">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+<script src="js/request.js"></script>
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(() => {
+        $('#signup-form').submit((e) => {
+            e.preventDefault();
+            $("#error-id").css('display', 'hidden');
+            $('#error-id').text('');
+            var userType = "";
+            if ($('#isCustomer')[0].checked) {
+                userType = "customer";
+            }
+            else if ($('#isGuide')[0].checked) {
+                userType = "guide";
+            }
+            else if ($('#isAgent')[0].checked) {
+                userType = "agent";
+            }
+            var registerInfo = {
+                firstName: $('#firstName').val(),
+                lastName: $('#lastName').val(),
+                email: $('#email').val(),
+                phoneNumber: $('#phoneNumber').val(),
+                username: $('#username').val(),
+                password: $('#password').val(),
+                birthDate: $('#birthDate').val(),
+                type: userType
+            };
+            if (registerInfo.username === ""
+                || registerInfo.password === ""
+                || registerInfo.firstName === ""
+                || registerInfo.email === ""
+                || registerInfo.phoneNumber === ""
+                || registerInfo.lastName === ""
+                || registerInfo.birthDate === ""
+                || registerInfo.type === "") {
+                return;
+            }
+            if ( !( $('#password').val() === $('#confirmPassword').val() ) ) {
+                $("#error-id").css('display', 'block');
+                $('#error-id').text('Passwords must match');
+                return;
+            }
+            var response = AjaxPost(registerInfo, "account", "signup");
+            if (!response.hasError) {
+                console.log(response.data);
+                // Open modal for successful sign up
+                $('#signup-success-msg').text(response.data.firstName + ', you have successfully signed up. You can log in now.');
+                $('#signup-success-modal').modal('show');
+            }
+            else if (response != null) {
+                $("#error-id").css('display', 'block');
+                $('#error-id').text(response.errorMessage);
+            }
+        });
+
+        $("#signup-btn").click((e) => {
+        });
+
+        $("#signup-success-login-btn").click((e) => {
+            $('#signup-success-modal').modal('hide');
+            window.location.replace("https://localhost:44333/Login.html");
+        });
+
+        // Execute a function when the user releases enter key
+        var arr = $('.u-input');
+        Array.prototype.forEach.call(arr, i => {
+            i.addEventListener("keyup", function (event) {
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    $("#login-btn").click();
+                }
+            });
+        });
+    });
+</script>
