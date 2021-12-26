@@ -23,6 +23,10 @@ namespace TravelAgency.Controllers
         public IActionResult Index()
         {
             // Dummy method for checking whether connection actually works.
+            dbContext.Users.Add(new Users
+            {
+                FirstName = "Arsa"
+            });
             var user = dbContext.Users.SingleOrDefault();
             var name = user.FirstName;
             ViewData["name"] = name;
