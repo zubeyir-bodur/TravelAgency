@@ -95,7 +95,7 @@
                 console.log("Welcome " + response.data.firstName + " !");
                 localStorage.setItem('userInfo', JSON.stringify(response.data));
                 // Subject to change welcome page, open
-                window.location.replace("https://localhost:44333/Tours.html");
+                window.location.replace("Tours.html");
             }
             else if (response != null) {
                 $("#error-id").css('display', 'block');
