@@ -1,11 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TravelAgencyAPI.Utils;
 
 namespace TravelAgencyAPI.Controllers
 {
-    public class DiscountController
+    [Route("api/[controller]")]
+    [ApiController]
+    [TokenCheck]
+    public class DiscountController : ControllerBase
     {
         /// <summary>
         /// An example http request
@@ -13,7 +18,7 @@ namespace TravelAgencyAPI.Controllers
         /// <param name="userInfo"></param>
         /// <returns></returns>
         [HttpGet("action")] // Please set the http request type, and http request name.
-        public IActionResult Action(LoginInfo userInfo)
+        public IActionResult Action()
         {
             ResponseModel response = new ResponseModel();
             try

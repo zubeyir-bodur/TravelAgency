@@ -133,11 +133,21 @@
         });
         console.log("ready");
         var userJSON = localStorage.getItem('userInfo');
-        if (user != null) {
+        if (userJSON != null) {
             console.log(userJSON);
             var user = JSON.parse(userJSON);
-            console.log(user);
-            console.log("Welcome!" + user.firstName);
+            if (user.uId != null &&
+                user.firstName != null &&
+                user.lastName != null &&
+                user.email != null &&
+                user.phoneNumber != null &&
+                user.username != null &&
+                user.birthDate != null &&
+                user.type != null) {
+                console.log(user);
+                window.location.replace("Tours.html");
+                console.log("Welcome!" + user.firstName);
+            }
         }
         else {
             console.log("Local storage is empty");
