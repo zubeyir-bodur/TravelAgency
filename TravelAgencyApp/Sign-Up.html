@@ -171,7 +171,8 @@
                 || registerInfo.type === "") {
                 return;
             }
-            if ( !( $('#password').val() === $('#confirmPassword').val() ) ) {
+            if (!($('#password').val() === $('#confirmPassword').val())) {
+                console.log("no match");
                 $("#error-id").css('display', 'block');
                 $('#error-id').text('Passwords must match');
                 return;
@@ -190,6 +191,8 @@
         });
 
         $("#signup-btn").click((e) => {
+            $("#error-id").css('display', 'hidden');
+            $('#error-id').text('');
         });
 
         $("#signup-success-login-btn").click((e) => {
