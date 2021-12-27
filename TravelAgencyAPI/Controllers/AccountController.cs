@@ -43,14 +43,13 @@ namespace TravelAgencyAPI.Controllers
                 var pass = userInfo.password;
 
                 // 1. Check if the credentials are correct
-                var user = dbContext.Users.AsNoTracking()
-                    .FirstOrDefault(u => u.Username == userInfo.username && u.Pass == userInfo.password);
+                var user = dbContext.Users.FromSqlInterpolated($"SELECT * FROM Users WHERE username = {userInfo.username} AND pass = {userInfo.password};")
+                    .ToList().FirstOrDefault();
+
                 bool exists = user != null;
-                Console.WriteLine(exists);
                 // 1.1 If not, send a error response
                 if (!exists)
                 {
-                    Console.WriteLine("nope");
                     response.HasError = true;
                     response.ErrorMessage = "Please check your credentials";
                 }
@@ -58,24 +57,44 @@ namespace TravelAgencyAPI.Controllers
                 else
                 {
                     // Find out the type of the user
-                    bool isCustomer = false;
-                    bool isGuide = false;
-                    bool isAgent = false;
+                    
+                    Customer customer;
+                    Guide guide;
+                    Agent agent;
+                    Employee employee;
                     string type = "";
-                    isCustomer = dbContext.Customers.AsNoTracking().FirstOrDefault(c => c.UId == user.UId) != null;
-                    isGuide = dbContext.Guides.AsNoTracking().FirstOrDefault(g => g.UId == user.UId) != null;
-                    isAgent = dbContext.Agents.AsNoTracking().FirstOrDefault(a => a.UId == user.UId) != null;
+                    string cAddress = "";
+                    decimal? wallet = 0;
+                    decimal? salary = 0;
+                    customer = dbContext.Customers.FromSqlInterpolated($"SELECT * FROM Customer WHERE u_id = {user.UId};")
+                        .ToList().FirstOrDefault();
+                    guide = dbContext.Guides.FromSqlInterpolated($"SELECT * FROM Guide WHERE u_id = {user.UId};")
+                        .ToList().FirstOrDefault();
+                    agent = dbContext.Agents.FromSqlInterpolated($"SELECT * FROM Agent WHERE u_id = {user.UId};")
+                        .ToList().FirstOrDefault();
+                    employee = dbContext.Employees.FromSqlInterpolated($"SELECT * FROM Employee WHERE u_id = {user.UId};")
+                        .ToList().FirstOrDefault();
+
+
+                    bool isCustomer = customer != null;
+                    bool isGuide = guide != null;
+                    bool isAgent = agent != null;
+
                     if (isCustomer)
                     {
                         type = "customer";
+                        cAddress = customer.CAddress;
+                        wallet = customer.Wallet;
                     }
                     else if (isGuide)
                     {
                         type = "guide";
+                        salary = employee.Salary;
                     }
                     else if (isAgent)
                     {
                         type = "agent";
+                        salary = employee.Salary;
                     }
                     else
                     {
@@ -85,7 +104,6 @@ namespace TravelAgencyAPI.Controllers
                     }
 
                     // Don't send password to frontend
-                    Console.WriteLine("yep");
                     switch (type)
                     {
                         case "customer":
@@ -99,8 +117,8 @@ namespace TravelAgencyAPI.Controllers
                                 phoneNumber = user.PhoneNumber,
                                 username = user.Username,
                                 type = type,
-                                cAddress = dbContext.Customers.AsNoTracking().FirstOrDefault(c => c.UId == user.UId).CAddress,
-                                wallet = dbContext.Customers.AsNoTracking().FirstOrDefault(c => c.UId == user.UId).Wallet,
+                                cAddress = cAddress,
+                                wallet = wallet,
                             };
                             break;
                         default:
@@ -114,7 +132,7 @@ namespace TravelAgencyAPI.Controllers
                                 phoneNumber = user.PhoneNumber,
                                 username = user.Username,
                                 type = type,
-                                salary = dbContext.Employees.AsNoTracking().FirstOrDefault(e => e.UId == user.UId).Salary,
+                                salary = salary,
                             };
                             break;
                     }
@@ -169,54 +187,29 @@ namespace TravelAgencyAPI.Controllers
                 var maxId = dbContext.Users.Max(table => table.UId);
                 var newId = maxId + 1;
                 user.UId = newId;
-                dbContext.Add<User>(user).State = EntityState.Added;
-                dbContext.SaveChanges();
 
-                // Get the UId assigned by the framework
-                int UId = dbContext.Users.FirstOrDefault(u => u.Username == user.Username).UId;
+                dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Users VALUES({user.UId}, {user.FirstName}, {user.LastName}, {user.Email}, {user.PhoneNumber}, {user.Username}, {user.Pass}, {user.BirthDate});");
+
+
                 switch (userInfo.type)
                 {
                     case "customer":
-                        var customer = new Customer {
-                            UId = UId
-                        };
-                        dbContext.Add<Customer>(customer).State = EntityState.Added;
-                        dbContext.SaveChanges();
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Customer VALUES({newId}, NULL, NULL);");
                         break;
                     case "agent":
-                        var agent = new Agent
-                        {
-                            UId = UId
-                        };
-                        var employeeA = new Employee
-                        {
-                            UId = UId
-                        };
-                        dbContext.Add<Employee>(employeeA).State = EntityState.Added;
-                        dbContext.SaveChanges();
-                        dbContext.Add<Agent>(agent).State = EntityState.Added;
-                        dbContext.SaveChanges();
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Employee VALUES({newId}, NULL);");
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Agent VALUES({newId});");
                         break;
                     case "guide":
-                        var guide = new Guide
-                        {
-                            UId = UId
-                        };
-                        var employeeG = new Employee
-                        {
-                            UId = UId
-                        };
-                        dbContext.Add<Employee>(employeeG).State = EntityState.Added;
-                        dbContext.SaveChanges();
-                        dbContext.Add<Guide>(guide).State = EntityState.Added;
-                        dbContext.SaveChanges();
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Employee VALUES({newId}, NULL);");
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Guide VALUES({newId});");
                         break;
                     default:
                         break;
                 }
                 response.Data = new
                 {
-                    uId = UId,
+                    uId = newId,
                     firstName = userInfo.firstName,
                     lastName = userInfo.lastName,
                     email = userInfo.email,
