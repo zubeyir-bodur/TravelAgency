@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using TravelAgencyAPI.Utils;
 
 namespace TravelAgencyAPI.Controllers
@@ -14,7 +15,7 @@ namespace TravelAgencyAPI.Controllers
         /// <param name="userInfo"></param>
         /// <returns></returns>
         [HttpGet("action")] // Please set the http request type, and http request name.
-        public IActionResult Action(LoginInfo userInfo)
+        public IActionResult Action()
         {
             ResponseModel response = new ResponseModel();
             try
