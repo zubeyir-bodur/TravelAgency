@@ -48,7 +48,7 @@
                             </div>
                             <div id="error-id" style="display: none; color:red;"></div>
                             <div class="form-group">
-                                <input id="login-btn" type="submit" name="submit" class="u-border-none u-btn u-btn-round u-button-style u-radius-50 u-btn-1" value="Login">
+                                <input id="login-btn" type="button" name="submit" class="u-border-none u-btn u-btn-round u-button-style u-radius-50 u-btn-1" value="Login">
                             </div>
                         </form>
                     </div>
@@ -80,8 +80,37 @@
 <script src="lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(document).ready(() => {
-        $('.form').submit((e) => {
+        $("#edit-form").removeClass("was-walidated");
+        var validate_me = document.querySelectorAll('.validate-me');
+        for (var i = 0; i < validate_me.length; i++) {
+            validate_me[i].classList.remove('is-valid');
+            validate_me[i].classList.remove('is-invalid');
+        }
+        $('#login-form').submit((e) => {
+            e.stopPropagation();
             e.preventDefault();
+            var form = document.getElementById('login-form');
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+            }
+            else {
+                form.classList.remove('was-validated');
+                var validate_me = document.querySelectorAll('.validate-me');
+                for (var i = 0; i < validate_me.length; i++) {
+                    validate_me[i].classList.add('is-valid');
+                }
+            }
+            /*
+            if (!$('#login-form')[0].checkValidity()) {
+                console.log("empty")
+                if ($("#username-5b0a").val() === "") {
+                    document.getElementById("username-5b0a").setCustomValidity("Please asdad out this field");
+                }
+                if ($("#password-5b0a").val() === "") {
+                    document.getElementById("password-5b0a").setCustomValidity("Please asdad out this field");
+                }
+            }
+            document.getElementById('login-form').reportValidity();*/
             var userInfo =
             {
                 username: $("#username-5b0a").val(),
@@ -104,18 +133,28 @@
         });
         console.log("ready");
         var userJSON = localStorage.getItem('userInfo');
-        if (user != null) {
+        if (userJSON != null) {
             console.log(userJSON);
             var user = JSON.parse(userJSON);
-            console.log(user);
-            console.log("Welcome!" + user.firstName);
+            if (user.uId != null &&
+                user.firstName != null &&
+                user.lastName != null &&
+                user.email != null &&
+                user.phoneNumber != null &&
+                user.username != null &&
+                user.birthDate != null &&
+                user.type != null) {
+                console.log(user);
+                window.location.replace("Tours.html");
+                console.log("Welcome!" + user.firstName);
+            }
         }
         else {
             console.log("Local storage is empty");
         }
 
         $("#login-btn").click((e) => {
-            $('#login-form').submit();
+            $("#login-form").submit();
         });
 
         // Execute a function when the user releases enter key
