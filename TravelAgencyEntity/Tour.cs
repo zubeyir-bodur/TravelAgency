@@ -20,10 +20,10 @@ namespace TravelAgencyEntity
         public string City { get; set; }
         public string TourName { get; set; }
         public DateTime? TourStartDate { get; set; }
-        public int? TourDays { get; set; }
         public string TourDescription { get; set; }
         public decimal? Price { get; set; }
         public int? DiscountId { get; set; }
+        public DateTime? TourEndDate { get; set; }
 
         public virtual Discount Discount { get; set; }
         public virtual AssignGuide AssignGuide { get; set; }
