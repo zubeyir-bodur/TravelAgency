@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Data.Common;
 using System.Linq;
 using TravelAgencyAPI.Utils;
 using TravelAgencyDTO;
@@ -53,17 +54,34 @@ namespace TravelAgencyAPI.Controllers
                 {
                     priceQ = " AND price >= " + tourFilter.priceRangeStart + " AND price <= " + tourFilter.priceRangeEnd;
                 }
-                string finalQuery = "SELECT * " +
+                string finalQuery = "WITH results" +
+                    "(tour_id, city, tour_name, tour_start_date, tour_description, price, discount_id, tour_end_date) " +
+                    "AS (SELECT * " +
                     "FROM Tour " +
                     "WHERE " +
                     dateQ +
                     cityQ +
                     priceQ +
-                    ";";
-                // SQL Queries here
-                var tours = dbContext.Tours.FromSqlRaw(finalQuery).ToList();
+                    ") " +
+                    " SELECT tour_id, tour_name, city, tour_start_date, tour_end_date, tour_description, price, percents " +
+                    " FROM results LEFT JOIN Discount ON results.discount_id = Discount.discount_id; ";
+                Func<DbDataReader, TourDTO> map = x => new TourDTO
+                {
+                    tourId = (int)x[0],
+                    tourName = (string)x[1],
+                    city = (string)x[2],
+                    tourStartDate = (DateTime)x[3],
+                    tourEndDate = (DateTime)x[4],
+                    tourDescription = (string)x[5],
+                    price = (decimal)x[6],
+                    discountPercents = (x[7] != DBNull.Value)?((int)x[7]):0 // if percents is null, then the discount applied is zero percent
+                };
+                //var tours = dbContext.Tours.FromSqlRaw(finalQuery).ToList();
+                Console.Write(finalQuery);
+                var toursDTO = Helper.RawSqlQuery<TourDTO>(finalQuery, map);
+                // Get the discount of each tour
                 // Send an HTTP response as data, if necessary
-                response.Data = tours;
+                response.Data = toursDTO;
             }
             catch (Exception ex)
             {
