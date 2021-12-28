@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TravelAgencyAPI.Utils;
+using TravelAgencyEntity;
 
 namespace TravelAgencyAPI.Controllers
 {
@@ -12,6 +13,12 @@ namespace TravelAgencyAPI.Controllers
     [TokenCheck]
     public class DiscountController : ControllerBase
     {
+        private readonly TravelAgencyContext dbContext;
+        public DiscountController()
+        {
+            if (dbContext == null) dbContext = new TravelAgencyContext();
+        }
+
         /// <summary>
         /// An example http request
         /// </summary>

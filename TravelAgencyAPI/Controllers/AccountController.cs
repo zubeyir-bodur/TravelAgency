@@ -41,8 +41,8 @@ namespace TravelAgencyAPI.Controllers
                 // Process incoming data, or return requested data
                 var username = userInfo.username;
                 var pass = userInfo.password;
-
                 // 1. Check if the credentials are correct
+
                 var user = dbContext.Users.FromSqlInterpolated($"SELECT * FROM Users WHERE username = {userInfo.username} AND pass = {userInfo.password};")
                     .ToList().FirstOrDefault();
 
