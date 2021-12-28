@@ -124,7 +124,7 @@
                 console.log("Welcome " + response.data.firstName + " !");
                 localStorage.setItem('userInfo', JSON.stringify(response.data));
                 // Subject to change welcome page, open
-                window.location.replace("Guides.html");
+                window.location.replace("My-Tours.html");
             }
             else if (response != null) {
                 $("#error-id").css('display', 'block');
@@ -146,7 +146,7 @@
                 user.birthDate != null &&
                 user.type != null) {
                 console.log(user);
-                window.location.replace("Guides.html");
+                window.location.replace("My-Tours.html");
                 console.log("Welcome!" + user.firstName);
             }
         }

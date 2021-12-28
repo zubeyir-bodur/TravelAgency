@@ -27,7 +27,7 @@ namespace TravelAgencyAPI.Controllers
         /// http://localhost:5000/api/booking/tours
         /// </returns>
         [HttpPost("tours")]
-        public IActionResult Action(TourFilter tourFilter)
+        public IActionResult Tours(TourFilter tourFilter)
         {
             ResponseModel response = new ResponseModel();
             try
