@@ -124,7 +124,7 @@
                 console.log("Welcome " + response.data.firstName + " !");
                 localStorage.setItem('userInfo', JSON.stringify(response.data));
                 // Subject to change welcome page, open
-                window.location.replace("Tours.html");
+                window.location.replace("Guides.html");
             }
             else if (response != null) {
                 $("#error-id").css('display', 'block');
