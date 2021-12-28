@@ -8,7 +8,6 @@ namespace TravelAgencyEntity
     public partial class HotelReservation
     {
         public int ReserveId { get; set; }
-        public DateTime? ReserveEndDate { get; set; }
         public int? RoomId { get; set; }
         public int? HotelId { get; set; }
 

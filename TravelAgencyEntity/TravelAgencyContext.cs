@@ -412,10 +412,6 @@ namespace TravelAgencyEntity
 
                 entity.Property(e => e.HotelId).HasColumnName("hotel_id");
 
-                entity.Property(e => e.ReserveEndDate)
-                    .HasColumnType("date")
-                    .HasColumnName("reserve_end_date");
-
                 entity.Property(e => e.RoomId).HasColumnName("room_id");
 
                 entity.HasOne(d => d.Reserve)
@@ -479,6 +475,10 @@ namespace TravelAgencyEntity
                 entity.Property(e => e.IsBooked).HasColumnName("is_booked");
 
                 entity.Property(e => e.NumReserving).HasColumnName("num_reserving");
+
+                entity.Property(e => e.ReserveEndDate)
+                    .HasColumnType("date")
+                    .HasColumnName("reserve_end_date");
 
                 entity.Property(e => e.ReserveStartDate)
                     .HasColumnType("date")
@@ -624,11 +624,13 @@ namespace TravelAgencyEntity
                     .HasColumnType("decimal(8, 2)")
                     .HasColumnName("price");
 
-                entity.Property(e => e.TourDays).HasColumnName("tour_days");
-
                 entity.Property(e => e.TourDescription)
                     .IsUnicode(false)
                     .HasColumnName("tour_description");
+
+                entity.Property(e => e.TourEndDate)
+                    .HasColumnType("date")
+                    .HasColumnName("tour_end_date");
 
                 entity.Property(e => e.TourName)
                     .HasMaxLength(64)

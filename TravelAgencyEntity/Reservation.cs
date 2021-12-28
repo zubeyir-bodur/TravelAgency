@@ -12,6 +12,7 @@ namespace TravelAgencyEntity
         public int? NumReserving { get; set; }
         public bool? IsBooked { get; set; }
         public int? UId { get; set; }
+        public DateTime? ReserveEndDate { get; set; }
 
         public virtual Customer UIdNavigation { get; set; }
         public virtual HotelReservation HotelReservation { get; set; }
