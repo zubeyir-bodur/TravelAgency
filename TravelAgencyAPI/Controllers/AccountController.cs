@@ -194,14 +194,14 @@ namespace TravelAgencyAPI.Controllers
                 switch (userInfo.type)
                 {
                     case "customer":
-                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Customer VALUES({newId}, NULL, NULL);");
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Customer VALUES({newId}, '', 0);");
                         break;
                     case "agent":
-                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Employee VALUES({newId}, NULL);");
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Employee VALUES({newId}, 0);");
                         dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Agent VALUES({newId});");
                         break;
                     case "guide":
-                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Employee VALUES({newId}, NULL);");
+                        dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Employee VALUES({newId}, 0);");
                         dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Guide VALUES({newId});");
                         break;
                     default:

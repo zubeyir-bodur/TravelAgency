@@ -55,7 +55,7 @@ namespace TravelAgencyAPI.Controllers
                     priceQ = " AND price >= " + tourFilter.priceRangeStart + " AND price <= " + tourFilter.priceRangeEnd;
                 }
                 string finalQuery = "WITH results" +
-                    "(tour_id, city, tour_name, tour_start_date, tour_description, price, discount_id, tour_end_date) " +
+                    "(tour_id, city, tour_name, tour_start_date, tour_description, price, discount_id, tour_end_date, discount_start_date) " +
                     "AS (SELECT * " +
                     "FROM Tour " +
                     "WHERE " +

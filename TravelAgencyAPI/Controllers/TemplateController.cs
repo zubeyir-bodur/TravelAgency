@@ -31,7 +31,7 @@ namespace TravelAgencyAPI.Controllers
         /// <param name="userInfo"></param>
         /// <returns></returns>
         [HttpGet("action")] // Please set the http request type, and http request name.
-        public IActionResult Action(LoginInfo userInfo)
+        public IActionResult Action()
         {
             ResponseModel response = new ResponseModel();
             try
@@ -42,8 +42,10 @@ namespace TravelAgencyAPI.Controllers
                 // you can set response.HasError = true
                 // set a ErrorMessage and just return Ok(response)
 
+                var tours = dbContext.Tours.FromSqlRaw("SELECT * FROM Tours").ToList();
+
                 // Send an HTTP response as data, if necessary
-                response.Data = null;
+                response.Data = tours;
             }
             catch (Exception ex)
             {

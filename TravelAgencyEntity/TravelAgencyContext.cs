@@ -84,6 +84,10 @@ namespace TravelAgencyEntity
 
                 entity.Property(e => e.DiscountId).HasColumnName("discount_id");
 
+                entity.Property(e => e.DiscountStartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("discount_start_date");
+
                 entity.Property(e => e.TicketPrice)
                     .HasColumnType("decimal(8, 2)")
                     .HasColumnName("ticket_price");
@@ -218,11 +222,7 @@ namespace TravelAgencyEntity
                     .ValueGeneratedNever()
                     .HasColumnName("discount_id");
 
-                entity.Property(e => e.DiscountStartTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("discount_start_time");
-
-                entity.Property(e => e.DiscountTimeInterval).HasColumnName("discount_time_interval");
+                entity.Property(e => e.DiscountDays).HasColumnName("discount_days");
 
                 entity.Property(e => e.DiscountType)
                     .HasMaxLength(16)
@@ -385,6 +385,10 @@ namespace TravelAgencyEntity
                     .HasColumnName("city");
 
                 entity.Property(e => e.DiscountId).HasColumnName("discount_id");
+
+                entity.Property(e => e.DiscountStartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("discount_start_date");
 
                 entity.Property(e => e.HotelName)
                     .HasMaxLength(64)
@@ -609,6 +613,8 @@ namespace TravelAgencyEntity
             {
                 entity.ToTable("Tour");
 
+                entity.HasIndex(e => e.TourName, "tourName");
+
                 entity.Property(e => e.TourId)
                     .ValueGeneratedNever()
                     .HasColumnName("tour_id");
@@ -619,6 +625,10 @@ namespace TravelAgencyEntity
                     .HasColumnName("city");
 
                 entity.Property(e => e.DiscountId).HasColumnName("discount_id");
+
+                entity.Property(e => e.DiscountStartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("discount_start_date");
 
                 entity.Property(e => e.Price)
                     .HasColumnType("decimal(8, 2)")
@@ -702,6 +712,8 @@ namespace TravelAgencyEntity
             {
                 entity.HasKey(e => e.UId)
                     .HasName("PK__Users__B51D3DEAB4605DCE");
+
+                entity.HasIndex(e => e.LastName, "userLastName");
 
                 entity.Property(e => e.UId)
                     .ValueGeneratedNever()

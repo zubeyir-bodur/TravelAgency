@@ -17,6 +17,7 @@ namespace TravelAgencyEntity
         public string City { get; set; }
         public int? NumOfStars { get; set; }
         public int? DiscountId { get; set; }
+        public DateTime? DiscountStartDate { get; set; }
 
         public virtual Discount Discount { get; set; }
         public virtual ICollection<Room> Rooms { get; set; }

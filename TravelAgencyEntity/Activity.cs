@@ -20,6 +20,7 @@ namespace TravelAgencyEntity
         public decimal? TicketPrice { get; set; }
         public int TourId { get; set; }
         public int? DiscountId { get; set; }
+        public DateTime? DiscountStartDate { get; set; }
 
         public virtual Discount Discount { get; set; }
         public virtual Tour Tour { get; set; }
