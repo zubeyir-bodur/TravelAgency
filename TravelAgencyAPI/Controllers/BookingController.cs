@@ -96,5 +96,41 @@ namespace TravelAgencyAPI.Controllers
             // Return the HTTP response
             return Ok(response);
         }
+
+        /// <summary>
+        /// Display hotels
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <returns></returns>
+        [HttpGet("hotels")] 
+        public IActionResult Hotels()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // SQL Queries here
+
+                // If you want to send an error to the frontend,
+                // you can set response.HasError = true
+                // set a ErrorMessage and just return Ok(response)
+
+                var hotels = dbContext.Hotels.FromSqlRaw("SELECT * FROM Hotel").ToList();
+
+                // Send an HTTP response as data, if necessary
+                response.Data = hotels;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
     }
 }
