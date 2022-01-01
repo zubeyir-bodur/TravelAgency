@@ -88,7 +88,6 @@
     <Content Include="images\1.jpeg" />
     <Content Include="images\2.jpeg" />
     <Content Include="images\3.jpeg" />
-    <Content Include="index.html" />
     <Content Include="js\jquery.js" />
     <Content Include="js\nicepage.js" />
     <Content Include="js\request.js" />
@@ -319,8 +318,9 @@
     <Content Include="Login.html" />
     <Content Include="Review.html" />
     <Content Include="Sign-Up.html" />
+    <Content Include="Statistics.html" />
     <Content Include="Tours.html" />
-    <Content Include="Travel-Agency.html" />
+    <Content Include="Index.html" />
     <Content Include="Web.config" />
     <Content Include="My-Reservations.html" />
     <Content Include="My-Tours.html" />
