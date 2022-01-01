@@ -4,11 +4,15 @@ function AjaxGet(values = null, controllerName, actionUrl) {
     var url = "http://localhost:5000/api/" + controllerName;
     if (!(actionUrl === ""))
         url = "http://localhost:5000/api/" + controllerName + "/" + actionUrl
+    console.log(url);
     if (values == null) {
         $.ajax({
             "url": url,
             "method": "GET",
             "async": false,
+            "headers": {
+                "Authorization": "Bearer "
+            },
             "success": (response) => returning = response
         });
     }
@@ -16,6 +20,9 @@ function AjaxGet(values = null, controllerName, actionUrl) {
         $.ajax({
             "url": url,
             "async": false,
+            "headers": {
+                "Authorization": "Bearer "
+            },
             "method": "GET",
             "data": values,
             "success": (response) => returning = response
@@ -34,7 +41,8 @@ function AjaxDelete(values, controllerName, actionUrl) {
         "method": "DELETE",
         "async": false,
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "
         },
         "data": JSON.stringify(values),
         "dataType": "json",
@@ -53,7 +61,8 @@ function AjaxPut(values, controllerName, actionUrl) {
         "method": "PUT",
         "async": false,
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "
         },
         "data": JSON.stringify(values),
         "dataType": "json",
@@ -72,7 +81,7 @@ function AjaxPost(values, controllerName, actionUrl) {
         "async": false,
         "headers": {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("token")
+            "Authorization": "Bearer "
         },
         "data": JSON.stringify(values),
         "dataType": "json",
@@ -91,6 +100,9 @@ async function AjaxGetAsync(values = null, controllerName, actionUrl) {
         await $.ajax({
             "url": url,
             "method": "GET",
+            "headers": {
+                "Authorization": "Bearer "
+            },
             "success": (response) => returning = response
         });
     }
@@ -99,6 +111,9 @@ async function AjaxGetAsync(values = null, controllerName, actionUrl) {
             "url": url,
             "method": "GET",
             "data": values,
+            "headers": {
+                "Authorization": "Bearer "
+            },
             "success": (response) => returning = response
         });
     }
@@ -114,7 +129,8 @@ async function AjaxDeleteAsync(values, controllerName, actionUrl) {
         "url": url,
         "method": "DELETE",
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "
         },
         "data": JSON.stringify(values),
         "dataType": "json",
@@ -132,7 +148,8 @@ async function AjaxPutAsync(values, controllerName, actionUrl) {
         "url": url,
         "method": "PUT",
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "
         },
         "data": JSON.stringify(values),
         "dataType": "json",
@@ -150,7 +167,7 @@ async function AjaxPostAsync(values, controllerName, actionUrl) {
         "method": "POST",
         "headers": {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("token")
+            "Authorization": "Bearer "
         },
         "data": JSON.stringify(values),
         "dataType": "json",
