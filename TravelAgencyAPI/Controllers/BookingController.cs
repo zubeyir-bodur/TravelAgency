@@ -132,5 +132,53 @@ namespace TravelAgencyAPI.Controllers
             // Return the HTTP response
             return Ok(response);
         }
+
+
+        /// <summary>
+        /// Display hotels
+        /// </summary>
+        /// <param name="tourId"></param>
+        /// <returns></returns>
+        [HttpGet("activities")]
+        public IActionResult Activities(int tourId)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // SQL Queries here
+
+                // If you want to send an error to the frontend,
+                // you can set response.HasError = true
+                // set a ErrorMessage and just return Ok(response)
+                string finalQuery = "SELECT activity_id, activity_name, a_description, activity_start_time, activity_end_time, ticket_price, percents " +
+                                    "FROM Activity LEFT JOIN Discount ON Activity.discount_id = Discount.discount_id " +
+                                    "WHERE tour_id = " + tourId + ";";
+                Func<DbDataReader, ActivityDTO> map = x => new ActivityDTO
+                {
+                    activityId = (int)x[0],
+                    activityName = (string)x[1],
+                    aDescription = (string)x[2],
+                    activityStartTime = (DateTime)x[3],
+                    activityEndTime = (DateTime)x[4],
+                    ticketPrice = (decimal)x[5],
+                    discountPercents = (x[6] != DBNull.Value) ? ((int)x[6]) : 0 // if percents is null, then the discount applied is zero percent
+                };
+                var activities = Helper.RawSqlQuery<ActivityDTO>(finalQuery, map).ToList();
+                // Send an HTTP response as data, if necessary
+                response.Data = activities;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
     }
 }
