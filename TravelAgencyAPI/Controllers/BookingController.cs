@@ -197,12 +197,12 @@ namespace TravelAgencyAPI.Controllers
             try
             {
                 // Need to join with discount and hotels, to compute discounted price
-                string finalQuery = "WITH table_(room_id, number, size, price, percents) AS(" +
+                string finalQuery = "WITH table_(room_id, number, size, price, percents) AS( " +
                                         "SELECT room_id, number, size, price, percents " +
                                         "FROM Room JOIN Hotel ON Room.hotel_id=Hotel.hotel_id " +
                                                         "LEFT JOIN Discount ON Discount.discount_id=Hotel.discount_id " +
                                         "WHERE Room.hotel_id = " + hotelId + ") " +
-                                    "SELECT room_id, number, size, price, price*(100-percents)/100 AS price_discounted" +
+                                    "SELECT room_id, number, size, price, price*(100-percents)/100 AS price_discounted " +
                                     "FROM table_;";
                 Func<DbDataReader, RoomDTO> map = x => new RoomDTO
                 {
@@ -210,7 +210,7 @@ namespace TravelAgencyAPI.Controllers
                     number = (int)x[1],
                     size = (int)x[2],
                     price = (decimal)x[3],
-                    priceDiscounted = (decimal)x[4]
+                    priceDiscounted = (x[4] == DBNull.Value)?((decimal)x[3]):((decimal)x[4])
                 };
                 var output = Helper.RawSqlQuery<RoomDTO>(finalQuery, map).ToList();
 

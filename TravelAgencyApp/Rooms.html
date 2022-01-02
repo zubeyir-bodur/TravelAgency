@@ -170,7 +170,11 @@
             // now retrived user data, can use it
             preferencesActHotel = JSON.parse(preferencesActHotelJSON);
             console.log(preferencesActHotel);
-            constructTableRooms([]);
+            var roomsResponse = AjaxGet(
+                {
+                    hotelId: preferencesActHotel.hotelId
+                }, "booking", "rooms");
+            constructTableRooms(roomsResponse.data);
         }
         else {
             window.location.replace("Search-Results-Act.html");
