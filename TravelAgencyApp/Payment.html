@@ -98,6 +98,21 @@
     </header>
     <section>
         <!--Payment Summary Here-->
+        <div class="card">
+            <h3 class="card-header text-center">Payment Summary</h3>
+            <div class="card-body">
+                <p class="card-text" id="tour-name"><b>Selected Tour: </b></p>
+                <p class="card-text" id="tour-price"><b>Discounted Tour Price: </b></p>
+                <p class="card-text"><b>Extra Activities Chosen (Name : Discounted Price): </b></p>
+                <div id="extra-activities"></div>
+                <p class="card-text" id="hotel-name"><b>Selected Hotel: </b></p>
+                <p class="card-text"><b>Selected Rooms (Number : Discounted Price per Day): </b></p>
+                <div id="rooms"></div>
+                <p class="card-text" id="sub-total"><b>Sub Total: </b></p>
+                <p class="card-text" id="num-people"><b>Number of People: </b></p>
+                <p class="card-text" id="total"><b>TOTAL: </b></p>
+            </div>
+        </div>
     </section>
     <div class="card-body" style="display:flex">
         <button id="reserve-btn" style="margin: 10px" type="button" name="reserve" class="u-border-none u-btn u-btn-round u-button-style u-radius-50 u-btn-1">
@@ -216,10 +231,32 @@
     });
 
     function processSummary(user, bookingInfo, preferencesActHotel, preferencesRoom) {
-        console.log(user);
-        console.log(bookingInfo);
-        console.log(preferencesActHotel);
-        console.log(preferencesRoom);
+        $('#tour-name').html($('#tour-name').html() + bookingInfo.tourName);
+        $('#tour-price').html($('#tour-price').html() + bookingInfo.tourPrice);
+        $('#hotel-name').html($('#hotel-name').html() + preferencesActHotel.hotelName);
+        $('#num-people').html($('#num-people').html() + bookingInfo.numPeople);
+
+        $('#extra-activities').html($('#extra-activities').html() + "<ul>");
+        console.log(preferencesActHotel.activities.length);
+        for (let i = 0; i < preferencesActHotel.activities.length; i++) {
+            console.log("iter" + i);
+            $('#extra-activities').html($('#extra-activities').html() + "<li>" + preferencesActHotel.activities[i].activityName + ": "
+                + (preferencesActHotel.activities[i].ticketPrice * (100.0 - preferencesActHotel.activities[i].discountPercents) / 100.0) + "</li>");
+        }
+        $('#extra-activities').html($('#extra-activities').html() + "</ul>");
+
+
+        $('#rooms').html($('#rooms').html() + "<ul>");
+        console.log(preferencesRoom.rooms.length);
+        for (let i = 0; i < preferencesRoom.rooms.length; i++) {
+            console.log("iter" + i);
+            $('#rooms').html($('#rooms').html() + "<li>" + preferencesRoom.rooms[i].number + ": "
+                + preferencesRoom.rooms[i].priceDiscounted+ "</li>");
+        }
+        $('#rooms').html($('#rooms').html() + "</ul>");
+
+        // todo calculate the # of days that the tour will take
+        // include the # of days in bookingInfo
     }
 
 </script>

@@ -205,7 +205,9 @@
             var checkBoxes = jQuery("input[type='checkbox']");
             var checkedCheckboxes = checkBoxes.filter(":checked");
             for (let i = 0; i < checkedCheckboxes.length; i++) {
-                activities.push(parseInt(checkedCheckboxes[i].value));
+                activities.push({
+                    activityId: parseInt(checkedCheckboxes[i].value)
+            });
             }
             // 2 - read the hotel radio button
             var radios = jQuery("input[type='radio']");
@@ -214,11 +216,32 @@
                 alert("Please select a hotel to continue your reservation/ booking");
                 return;
             }
-            hotelId = selectedRadio[0].value;
+            hotelId = parseInt(selectedRadio[0].value);
+            var hotelName;
+            var datatableHotels = $('#table-hotels').DataTable().rows().data();
+            console.log(datatableHotels);
+            for (let i = 0; i < datatableHotels.length; i++) {
+                if (datatableHotels[i].hotelId === hotelId) {
+                    hotelName = datatableHotels[i].hotelName;
+                }
+            }
+
+            var datatableActivities = $('#table-activities').DataTable().rows().data();
+            for (let i = 0; i < datatableActivities.length; i++) {
+                for (let j = 0; j < activities.length; j++) {
+                    if (datatableActivities[i].activityId === activities[j].activityId) {
+                        activities[j].activityName = datatableActivities[i].activityName;
+                        activities[j].ticketPrice = datatableActivities[i].ticketPrice;
+                        activities[j].discountPercents = datatableActivities[i].discountPercents;
+                    }
+                }
+            }
+
             // 3 - set localstorage
             var preferencesActHotel = {
                 activities: activities,
-                hotelId: parseInt(hotelId)
+                hotelId: hotelId,
+                hotelName: hotelName
             };
             console.log(preferencesActHotel);
             localStorage.setItem('preferencesActHotel', JSON.stringify(preferencesActHotel));
@@ -258,7 +281,7 @@
                     data: "ticketPrice"
                 },
                 {
-                    title: "Discount (if any)",
+                    title: "Discount Percentage (if any)",
                     data: "discountPercents"
                 },
                 {
@@ -314,7 +337,7 @@
                     data: "numOfStars"
                 },
                 {
-                    title: "Discount (if any)",
+                    title: "Discount Percentage (if any)",
                     data: "discountPercents"
                 },
                 {
