@@ -98,6 +98,9 @@
     </header>
     <section>
         <div>
+            <div class="alert alert-warning" role="alert" id="num-booking">
+                Number of people booking is : 
+            </div>
             <div class="card-body">
                 <h3 class="text-center">Rooms for the Hotel Selected</h3>
                 <div class="table-responsive">
@@ -158,6 +161,7 @@
             // now retrived user data, can use it
             bookingInfo = JSON.parse(bookingInfoJSON);
             console.log(bookingInfo);
+            $('#num-booking').text($('#num-booking').text() + bookingInfo.numPeople);
         }
         else {
             window.location.replace("My-Tours.html");
@@ -202,7 +206,24 @@
         });
 
         $('#continue-btn').click((e) => {
-            
+            var roomIdS = [];
+            // 1 - read the hotel radio button
+            var checkboxes = jQuery("input[type='checkBox']");
+            var checkedCheckboxes = checkboxes.filter(":checked");
+            if (checkedCheckboxes.length == 0) {
+                alert("Please select at least one room to continue your reservation/ booking");
+                return;
+            }
+            for (let i = 0; i < checkedCheckboxes.length; i++) {
+                roomIdS.push(parseInt(checkedCheckboxes[i].value));
+            }
+            // 3 - set localstorage
+            var preferencesRoom = {
+                roomId: roomIdS
+            };
+            console.log(preferencesRoom);
+            localStorage.setItem('preferencesRoom', JSON.stringify(preferencesRoom));
+            window.location.replace('Payment.html');
         });
     });
 

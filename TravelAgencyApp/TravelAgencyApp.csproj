@@ -316,6 +316,7 @@
     <Content Include="lib\jquery\src\var\toString.js" />
     <Content Include="lib\jquery\src\wrap.js" />
     <Content Include="Login.html" />
+    <Content Include="Payment.html" />
     <Content Include="Review.html" />
     <Content Include="Rooms.html" />
     <Content Include="Sign-Up.html" />
