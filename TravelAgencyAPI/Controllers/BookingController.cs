@@ -188,6 +188,45 @@ namespace TravelAgencyAPI.Controllers
         /// <summary>
         /// Display hotels
         /// </summary>
+        /// <param name="hotelId"></param>
+        /// <returns></returns>
+        [HttpGet("rooms")]
+        public IActionResult Room(int hotelId)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // Need to join with discount and hotels, to compute discounted price
+                string finalQuery = ";";
+                Func<DbDataReader, RoomDTO> map = x => new RoomDTO
+                {
+                    roomId = (int)x[0],
+                    number = (int)x[1],
+                    size = (int)x[2],
+                    price = (decimal)x[3],
+                    priceDiscounted = (decimal)x[4]
+                };
+                var output = Helper.RawSqlQuery<RoomDTO>(finalQuery, map).ToList();
+
+                response.Data = output;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Display hotels
+        /// </summary>
         /// <param name="paymentInfo"></param>
         /// <returns></returns>
         [HttpGet("payment")] // need a custom modelBinder...

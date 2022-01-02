@@ -315,17 +315,29 @@
                     data: "discountPercents"
                 },
                 {
+                    title: "Discounted Price",
+                    data: null
+                },
+                {
                     title: "Actions",
                     data: null
                 }
             ],
-            columnDefs: [{
-                "targets": -1,
-                "data": null,
-                "render": function (data, type, row, meta) {
-                    return "<button class='btn btn-primary select-tour' value='" + data.tourId + "'>Select</button>";
-                }
-            }]
+            columnDefs: [
+                {
+                    "targets": -1,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return "<button class='btn btn-primary select-tour' value='" + data.tourId + "'>Select</button>";
+                    }
+                },
+                {
+                    "targets": -2,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return data.price * (100.0 - data.discountPercents) / 100.0;
+                    }
+                }]
         });
     }
 
