@@ -317,6 +317,7 @@
     <Content Include="lib\jquery\src\wrap.js" />
     <Content Include="Login.html" />
     <Content Include="Review.html" />
+    <Content Include="Rooms.html" />
     <Content Include="Sign-Up.html" />
     <Content Include="Statistics.html" />
     <Content Include="Tours.html" />
