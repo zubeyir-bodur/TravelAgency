@@ -17,6 +17,7 @@ function AjaxGet(values = null, controllerName, actionUrl) {
         });
     }
     else {
+        console.log(values);
         $.ajax({
             "url": url,
             "async": false,

@@ -9,6 +9,6 @@ namespace TravelAgencyDTO
         public int uId { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
-        public decimal avgStars { get; set; }
+        public int avgStars { get; set; }
     }
 }

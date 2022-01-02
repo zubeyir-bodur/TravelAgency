@@ -11,7 +11,7 @@ namespace TravelAgencyDTO
         public string aDescription { get; set; }
         public DateTime? activityStartTime { get; set; }
         public DateTime? activityEndTime { get; set; }
-        public decimal? ticketPrice { get; set; }
+        public decimal ticketPrice { get; set; }
         public int discountPercents { get; set; }
     }
 }
