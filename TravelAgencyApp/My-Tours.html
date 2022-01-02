@@ -280,6 +280,9 @@
 
     function constructTable(tourList) {
         $('#table-results').DataTable({
+            "language": {
+                "emptyTable": "You have not searched any tours yet or no results was found"
+            },
             data: tourList,
             columns: [
                 {
@@ -311,21 +314,33 @@
                     data: "price"
                 },
                 {
-                    title: "Discount (if any)",
+                    title: "Discount Percentage (if any)",
                     data: "discountPercents"
+                },
+                {
+                    title: "Discounted Price",
+                    data: null
                 },
                 {
                     title: "Actions",
                     data: null
                 }
             ],
-            columnDefs: [{
-                "targets": -1,
-                "data": null,
-                "render": function (data, type, row, meta) {
-                    return "<button class='btn btn-primary select-tour' value='" + data.tourId + "'>Select</button>";
-                }
-            }]
+            columnDefs: [
+                {
+                    "targets": -1,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return "<button class='btn btn-primary select-tour' value='" + data.tourId + "'>Select</button>";
+                    }
+                },
+                {
+                    "targets": -2,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return data.price * (100.0 - data.discountPercents) / 100.0;
+                    }
+                }]
         });
     }
 
@@ -333,15 +348,23 @@
         var buttons = document.querySelectorAll(".select-tour");
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', (e) => {
-                console.log("clicked");
-                // 1.1 - Get the tour id
-                var tourId = $('#select-tour').attr('value');
+                var tourId = parseInt(buttons[i].getAttribute('value'));
+                var tourName;
+                var price;
+                var datatable = $('#table-results').DataTable().rows().data();
+                for (let i = 0; i < datatable.length; i++) {
+                    if (datatable[i].tourId === tourId) {
+                        tourName = datatable[i].tourName;
+                        price = datatable[i].price;
+                    }
+                }
                 // 1 - Save the tour id & numPeople booking to localStorage
                 localStorage.setItem('bookingInfo', JSON.stringify({
-                    tourId: parseInt(buttons[i].getAttribute('value') ),
+                    tourId: tourId,
+                    tourName: tourName,
+                    tourPrice: price,
                     numPeople: numBooking
                 }));
-                console.log(localStorage.getItem('bookingInfo'));
                 // 2 - redirect to proper page
                 window.location.replace("Search-Results-Act.html");
             });

@@ -188,6 +188,51 @@ namespace TravelAgencyAPI.Controllers
         /// <summary>
         /// Make payment
         /// </summary>
+        /// <param name="hotelId"></param>
+        /// <returns></returns>
+        [HttpGet("rooms")]
+        public IActionResult Room(int hotelId)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // Need to join with discount and hotels, to compute discounted price
+                string finalQuery = "WITH table_(room_id, number, size, price, percents) AS( " +
+                                        "SELECT room_id, number, size, price, percents " +
+                                        "FROM Room JOIN Hotel ON Room.hotel_id=Hotel.hotel_id " +
+                                                        "LEFT JOIN Discount ON Discount.discount_id=Hotel.discount_id " +
+                                        "WHERE Room.hotel_id = " + hotelId + ") " +
+                                    "SELECT room_id, number, size, price, price*(100-percents)/100 AS price_discounted " +
+                                    "FROM table_;";
+                Func<DbDataReader, RoomDTO> map = x => new RoomDTO
+                {
+                    roomId = (int)x[0],
+                    number = (int)x[1],
+                    size = (int)x[2],
+                    price = (decimal)x[3],
+                    priceDiscounted = (x[4] == DBNull.Value)?((decimal)x[3]):((decimal)x[4])
+                };
+                var output = Helper.RawSqlQuery<RoomDTO>(finalQuery, map).ToList();
+
+                response.Data = output;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Display hotels
+        /// </summary>
         /// <param name="paymentInfo"></param>
         /// <returns></returns>
         [HttpGet("payment")] // need a custom modelBinder...
