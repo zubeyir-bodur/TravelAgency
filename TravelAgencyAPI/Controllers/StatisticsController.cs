@@ -202,7 +202,7 @@ namespace TravelAgencyAPI.Controllers
                     uId = (int)x[0],
                     firstName = (string)x[1],
                     lastName = (string)x[2],
-                    avgStars = (decimal)x[3],
+                    avgStars = (int)x[3],
                 };
                 Console.Write(finalQuery);
                 var topGuides = Helper.RawSqlQuery<GuideRating>(finalQuery, map);

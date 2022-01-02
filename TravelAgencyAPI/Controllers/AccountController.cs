@@ -197,7 +197,6 @@ namespace TravelAgencyAPI.Controllers
 
                 dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Users VALUES({user.UId}, {user.FirstName}, {user.LastName}, {user.Email}, {user.PhoneNumber}, {user.Username}, {user.Pass}, {user.BirthDate});");
 
-
                 switch (userInfo.type)
                 {
                     case "customer":

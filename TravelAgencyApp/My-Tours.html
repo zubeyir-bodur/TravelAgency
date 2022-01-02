@@ -61,7 +61,7 @@
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review Guide</a>
                         </li>
                         <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base logout-btn" style="padding: 10px 20px;">Log Out</a>
+                            <a href="#" id="logout-btn" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
                         </li>
                     </ul>
                 </div>
@@ -86,7 +86,7 @@
                                     <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review Guide</a>
                                 </li>
                                 <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base logout-btn" style="padding: 10px 20px;">Log Out</a>
+                                    <a href="#" id="logout-btn-side" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
                                 </li>
                             </ul>
                         </div>
@@ -154,7 +154,6 @@
 
     <script src="js/request.js"></script>
     <script src="lib/jquery/dist/jquery.min.js"></script>
-    <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/datatables/datatables.min.js"></script>
     <script src="lib/datatables/dataTables.buttons.min.js"></script>
     <script src="lib/datatables/DataTables-1.10.25/js/dataTables.bootstrap5.min.js"></script>
@@ -164,7 +163,7 @@
 <script>
     $(document).ready(() => {
 
-
+        var numBooking;
         // Login the user if it was logged in
         var userJSON = localStorage.getItem('userInfo');
         if (userJSON != null && !(userJSON === undefined) && !(userJSON === "")) {
@@ -174,18 +173,24 @@
             constructTable([]);
         }
         else {
-            window.replace("Index.html");
+            window.location.replace("Index.html");
         }
 
         // Basic logout, need to include it in every navbar, or find a better way to do it
-        var btns = document.querySelectorAll(".logout-btn");
-        Array.prototype.slice.call(btns).forEach((btn) => {
-            btn.click((e) => {
-                // set user info JSON string to empty
-                localStorage.setItem('userInfo', "");
-                // redirect to welcome page
-                window.location.replace("Index.html");
-            });
+        $('#logout-btn').click((e) => {
+            console.log("Pressed");
+            // set user info JSON string to empty
+            localStorage.setItem('userInfo', "");
+            // redirect to welcome page
+            window.location.replace("Index.html");
+        });
+
+        $('#logout-btn-side').click((e) => {
+            console.log("Pressed");
+            // set user info JSON string to empty
+            localStorage.setItem('userInfo', "");
+            // redirect to welcome page
+            window.location.replace("Index.html");
         });
 
         // List all available tours and apply filters
@@ -256,10 +261,10 @@
             };
             var response = AjaxPost(tourFilter, "booking", "tours");
             if (!response.hasError) {
-                console.log(response);
                 var datatable = $('#table-results').DataTable();
                 datatable.clear().rows.add(response.data).draw();
-
+                numBooking = parseInt(numPeople);
+                bindClicks(numBooking);
             }
             else if (response != null) {
                 $("#error-id").css('display', 'block');
@@ -308,9 +313,38 @@
                 {
                     title: "Discount (if any)",
                     data: "discountPercents"
-                }// TODO Add buttons to proceed with the booking
-            ]
+                },
+                {
+                    title: "Actions",
+                    data: null
+                }
+            ],
+            columnDefs: [{
+                "targets": -1,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return "<button class='btn btn-primary select-tour' value='" + data.tourId + "'>Select</button>";
+                }
+            }]
         });
     }
 
+    function bindClicks(numBooking) {
+        var buttons = document.querySelectorAll(".select-tour");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', (e) => {
+                console.log("clicked");
+                // 1.1 - Get the tour id
+                var tourId = $('#select-tour').attr('value');
+                // 1 - Save the tour id & numPeople booking to localStorage
+                localStorage.setItem('bookingInfo', JSON.stringify({
+                    tourId: parseInt(buttons[i].getAttribute('value') ),
+                    numPeople: numBooking
+                }));
+                console.log(localStorage.getItem('bookingInfo'));
+                // 2 - redirect to proper page
+                window.location.replace("Search-Results-Act.html");
+            });
+        }
+    }
 </script>

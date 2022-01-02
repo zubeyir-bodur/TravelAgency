@@ -98,12 +98,53 @@ namespace TravelAgencyAPI.Controllers
         }
 
         /// <summary>
-        /// Display hotels
+        /// Display hotels, add some like condition just to be safe
         /// </summary>
-        /// <param name="userInfo"></param>
+        /// <param name="tourId"></param>
         /// <returns></returns>
         [HttpGet("hotels")] 
-        public IActionResult Hotels()
+        public IActionResult Hotels(int tourId)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                var tourCity = dbContext.Tours.FromSqlRaw("SELECT * FROM Tour WHERE tour_id = " + tourId + ";").ToList().FirstOrDefault().City;
+                string finalQuery = "SELECT * FROM Hotel WHERE city LIKE '%" + tourCity + "%' ";
+                Func<DbDataReader, HotelDTO> map = x => new HotelDTO
+                {
+                    hotelId = (int)x[0],
+                    hotelName = (string)x[1],
+                    city = (string)x[2],
+                    numOfStars = (int)x[3],
+                    discountPercents = (x[4] != DBNull.Value) ? ((int)x[4]) : 0 // if percents is null, then the discount applied is zero percent
+                };
+                var hotels = Helper.RawSqlQuery<HotelDTO>(finalQuery, map);
+
+                // Send an HTTP response as data, if necessary
+                response.Data = hotels;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+
+        /// <summary>
+        /// Display hotels
+        /// </summary>
+        /// <param name="tourId"></param>
+        /// <returns></returns>
+        [HttpGet("activities")]
+        public IActionResult Activities(int tourId)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -113,11 +154,56 @@ namespace TravelAgencyAPI.Controllers
                 // If you want to send an error to the frontend,
                 // you can set response.HasError = true
                 // set a ErrorMessage and just return Ok(response)
-
-                var hotels = dbContext.Hotels.FromSqlRaw("SELECT * FROM Hotel").ToList();
-
+                string finalQuery = "SELECT activity_id, activity_name, a_description, activity_start_time, activity_end_time, ticket_price, percents " +
+                                    "FROM Activity LEFT JOIN Discount ON Activity.discount_id = Discount.discount_id " +
+                                    "WHERE tour_id = " + tourId + ";";
+                Func<DbDataReader, ActivityDTO> map = x => new ActivityDTO
+                {
+                    activityId = (int)x[0],
+                    activityName = (string)x[1],
+                    aDescription = (string)x[2],
+                    activityStartTime = (DateTime)x[3],
+                    activityEndTime = (DateTime)x[4],
+                    ticketPrice = (decimal)x[5],
+                    discountPercents = (x[6] != DBNull.Value) ? ((int)x[6]) : 0 // if percents is null, then the discount applied is zero percent
+                };
+                var activities = Helper.RawSqlQuery<ActivityDTO>(finalQuery, map).ToList();
                 // Send an HTTP response as data, if necessary
-                response.Data = hotels;
+                response.Data = activities;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Display hotels
+        /// </summary>
+        /// <param name="paymentInfo"></param>
+        /// <returns></returns>
+        [HttpGet("payment")] // need a custom modelBinder...
+        public IActionResult Payment(PaymentInfo paymentInfo)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                
+                string finalQuery = ";";
+                Func<DbDataReader, ActivityDTO> map = x => new ActivityDTO
+                {
+                };
+                var output = Helper.RawSqlQuery<ActivityDTO>(finalQuery, map).ToList();
+
+                response.Data = output;
             }
             catch (Exception ex)
             {
