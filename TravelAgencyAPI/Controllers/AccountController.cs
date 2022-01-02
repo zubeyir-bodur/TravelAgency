@@ -184,7 +184,14 @@ namespace TravelAgencyAPI.Controllers
                         return Ok(response);
 
                 }
-                var maxId = dbContext.Users.Max(table => table.UId);
+                int maxId;
+                if (dbContext.Users.Count() > 0)
+                {
+                    maxId = dbContext.Users.Max(table => table.UId);
+                }
+                else {
+                    maxId = 0;
+                }
                 var newId = maxId + 1;
                 user.UId = newId;
 
