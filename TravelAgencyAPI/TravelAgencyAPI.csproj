@@ -5,6 +5,7 @@
     <OutputType>Exe</OutputType>
     <ApplicationIcon />
     <StartupObject />
+    <UserSecretsId>2363b706-d962-4a83-b88e-f7e672cd013d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

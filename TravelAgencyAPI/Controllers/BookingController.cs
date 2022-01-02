@@ -139,7 +139,7 @@ namespace TravelAgencyAPI.Controllers
 
 
         /// <summary>
-        /// Display hotels
+        /// Display activities
         /// </summary>
         /// <param name="tourId"></param>
         /// <returns></returns>
@@ -186,7 +186,7 @@ namespace TravelAgencyAPI.Controllers
         }
 
         /// <summary>
-        /// Display hotels
+        /// Make payment
         /// </summary>
         /// <param name="hotelId"></param>
         /// <returns></returns>
@@ -244,11 +244,14 @@ namespace TravelAgencyAPI.Controllers
                 // SQL Queries here 
                 var customer = dbContext.Customers.FromSqlRaw("SELECT * FROM Customer WHERE UId = " + paymentInfo.uId + ";").ToList().FirstOrDefault();
                 string finalQuery = "SELECT * FROM Customer WHERE UId = " + paymentInfo.uId + ";";
-                // todo - give error message to frontend if customer has insufficient funds
+
                 dbContext.Database.ExecuteSqlInterpolated($"UPDATE Customer SET Customer.Wallet = Wallet - {paymentInfo.amount} WHERE Customer.UId = {paymentInfo.uId};");
 
                 Func<DbDataReader, PaymentInfo> map = x => new PaymentInfo
                 {
+                    paymentId = (int)x[0],
+                    uId = (int)x[1],
+                    amount = (int)x[2],
                 };
 
                 var payment = Helper.RawSqlQuery<PaymentInfo>(finalQuery, map);
