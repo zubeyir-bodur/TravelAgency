@@ -133,8 +133,7 @@
         });
         console.log("ready");
         var userJSON = localStorage.getItem('userInfo');
-        console.log(userJSON.length)
-        if (!(userJSON === "")) {
+        if ( userJSON != null && !(userJSON === "")) {
             console.log("\"" + userJSON + "\"");
             var user = JSON.parse(userJSON);
             if (user.uId != null &&
