@@ -235,20 +235,26 @@ namespace TravelAgencyAPI.Controllers
         /// </summary>
         /// <param name="paymentInfo"></param>
         /// <returns></returns>
-        [HttpGet("payment")] // need a custom modelBinder...
+        [HttpPut("payment")] // need a custom modelBinder..., nope problem solved
         public IActionResult Payment(PaymentInfo paymentInfo)
         {
             ResponseModel response = new ResponseModel();
             try
             {
-                
-                string finalQuery = ";";
-                Func<DbDataReader, ActivityDTO> map = x => new ActivityDTO
+                // SQL Queries here 
+                var customer = dbContext.Customers.FromSqlRaw("SELECT * FROM Customer WHERE UId = " + paymentInfo.uId + ";").ToList().FirstOrDefault();
+                string finalQuery = "SELECT * FROM Customer WHERE UId = " + paymentInfo.uId + ";";
+                // todo - give error message to frontend if customer has insufficient funds
+                dbContext.Database.ExecuteSqlInterpolated($"UPDATE Customer SET Customer.Wallet = Wallet - {paymentInfo.amount} WHERE Customer.UId = {paymentInfo.uId};");
+
+                Func<DbDataReader, PaymentInfo> map = x => new PaymentInfo
                 {
                 };
-                var output = Helper.RawSqlQuery<ActivityDTO>(finalQuery, map).ToList();
 
-                response.Data = output;
+                var payment = Helper.RawSqlQuery<PaymentInfo>(finalQuery, map);
+
+                // Send an HTTP response as data, if necessary
+                response.Data = payment;
             }
             catch (Exception ex)
             {
