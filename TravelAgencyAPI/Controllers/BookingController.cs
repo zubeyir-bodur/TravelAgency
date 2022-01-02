@@ -235,7 +235,7 @@ namespace TravelAgencyAPI.Controllers
         /// </summary>
         /// <param name="paymentInfo"></param>
         /// <returns></returns>
-        [HttpGet("payment")] // need a custom modelBinder...
+        [HttpPut("payment")] // need a custom modelBinder..., nope problem solved
         public IActionResult Payment(PaymentInfo paymentInfo)
         {
             ResponseModel response = new ResponseModel();

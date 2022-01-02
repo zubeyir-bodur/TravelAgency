@@ -222,11 +222,11 @@
         });
 
         $('#book-btn').click((e) => {
-            
+            // todo send a put request for payment if booking is pressed
         });
 
         $('#reserve-btn').click((e) => {
-
+            // todo send a post request for reservation if reservation is pressed
         });
     });
 
@@ -254,9 +254,18 @@
                 + preferencesRoom.rooms[i].priceDiscounted+ "</li>");
         }
         $('#rooms').html($('#rooms').html() + "</ul>");
+        
+        var subTotal = bookingInfo.tourPrice;
+        for (let i = 0; i < preferencesActHotel.activities.length; i++) {
+            subTotal += preferencesActHotel.activities[i].ticketPrice * (100.0 - preferencesActHotel.activities[i].discountPercents) / 100.0;
+        }
+        for (let i = 0; i < preferencesRoom.rooms.length; i++) {
+            subTotal += preferencesRoom.rooms[i].priceDiscounted;
+        }
+        var total = subTotal * bookingInfo.numPeople;
 
-        // todo calculate the # of days that the tour will take
-        // include the # of days in bookingInfo
+        $('#sub-total').html($('#sub-total').html() + subTotal);
+        $('#total').html($('#total').html() + total);
     }
 
 </script>
