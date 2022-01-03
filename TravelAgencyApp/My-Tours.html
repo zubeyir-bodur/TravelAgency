@@ -52,7 +52,7 @@
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Guides</a>
                         </li>
                         <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">My Reservations</a>
+                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;" href="Reservations.html">My Reservations</a>
                         </li>
                         <li class="u-nav-item">
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review Tour</a>
@@ -77,7 +77,7 @@
                                     <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Guides</a>
                                 </li>
                                 <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">My Reservations</a>
+                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;" href="Reservations.html">My Reservations</a>
                                 </li>
                                 <li class="u-nav-item">
                                     <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review Tour</a>
@@ -351,11 +351,15 @@
                 var tourId = parseInt(buttons[i].getAttribute('value'));
                 var tourName;
                 var price;
+                var tourStartDate;
+                var tourEndDate;
                 var datatable = $('#table-results').DataTable().rows().data();
                 for (let i = 0; i < datatable.length; i++) {
                     if (datatable[i].tourId === tourId) {
                         tourName = datatable[i].tourName;
                         price = datatable[i].price;
+                        tourStartDate = datatable[i].tourStartDate;
+                        tourEndDate = datatable[i].tourEndDate;
                     }
                 }
                 // 1 - Save the tour id & numPeople booking to localStorage
@@ -363,7 +367,9 @@
                     tourId: tourId,
                     tourName: tourName,
                     tourPrice: price,
-                    numPeople: numBooking
+                    numPeople: numBooking,
+                    tourStartDate: tourStartDate,
+                    tourEndDate: tourEndDate
                 }));
                 // 2 - redirect to proper page
                 window.location.replace("Search-Results-Act.html");

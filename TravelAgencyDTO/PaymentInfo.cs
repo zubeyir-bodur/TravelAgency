@@ -6,8 +6,7 @@ namespace TravelAgencyDTO
 {
     public class PaymentInfo
     {
-        public int paymentId { get; set; }
         public int uId { get; set; }
-        public int amount { get; set; }       
+        public int total { get; set; }       
     }
 }

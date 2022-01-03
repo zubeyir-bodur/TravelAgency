@@ -6,7 +6,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="page_type" content="np-template-header-footer-from-plugin">
-    <title>Payment Summary</title>
+    <title>Your Reservations</title>
     <link rel="stylesheet" href="css/nicepage.css" media="screen">
     <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script class="u-script" type="text/javascript" src="js/nicepage.js" defer=""></script>
@@ -52,7 +52,7 @@
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Guides</a>
                         </li>
                         <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">My Reservations</a>
+                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Reservations.html" style="padding: 10px 20px;">My Reservations</a>
                         </li>
                         <li class="u-nav-item">
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review Tour</a>
@@ -97,33 +97,37 @@
         </div>
     </header>
     <section>
-        <!--Payment Summary Here-->
-        <div class="card">
-            <h3 class="card-header text-center">Payment Summary</h3>
-            <div class="card-body">
-                <p class="card-text" id="tour-name"><b>Selected Tour: </b></p>
-                <p class="card-text" id="tour-price"><b>Discounted Tour Price: </b></p>
-                <p class="card-text"><b>Extra Activities Chosen (Name : Discounted Price): </b></p>
-                <div id="extra-activities"></div>
-                <p class="card-text" id="hotel-name"><b>Selected Hotel: </b></p>
-                <p class="card-text"><b>Selected Rooms (Number : Discounted Price per Day): </b></p>
-                <div id="rooms"></div>
-                <p class="card-text" id="tour-length"><b>Tour Length: </b></p>
-                <p class="card-text" id="sub-total"><b>Sub Total: </b></p>
-                <p class="card-text" id="num-people"><b>Number of People: </b></p>
-                <p class="card-text" id="total"><b>TOTAL: </b></p>
-                <p class="card-text" id="wallet" style="color:green;"><b>Your Balance: </b></p>
+        <!--Tour Reservation-->
+        <div class="card-body">
+            <h3 class="text-center">Your Tour Reservations</h3>
+            <div class="table-responsive">
+                <table id="table-tour-res" class="table w-100">
+                </table>
             </div>
         </div>
+        <div id="list-tour-reservations" style="display:none">
+            <label for="tour-res-input">Tour Reservations</label>
+            <select id="tour-res-input"></select>
+        </div>
+        <!--Marked Activity for selected Tour Reservation-->
+        <div class="card-body">
+            <h3 class="text-center">Marked Activities for This Tour</h3>
+            <div class="table-responsive">
+                <table id="table-marked-activities" class="table w-100">
+                </table>
+            </div>
+        </div>
+        <!--Hotel Reservations-->
+        <div class="card-body">
+            <h3 class="text-center">Your Hotel Reservations</h3>
+            <div class="table-responsive">
+                <table id="table-hotel-res" class="table w-100">
+                </table>
+            </div>
+        </div>
+        <!--Book button to convert them to bookings and payment, but this was not asked
+    For now, just list the reservations only-->
     </section>
-    <div class="card-body" style="display:flex">
-        <button id="reserve-btn" style="margin: 10px" type="button" name="reserve" class="u-border-none u-btn u-btn-round u-button-style u-radius-50 u-btn-1">
-            Reserve All
-        </button>
-        <button id="book-btn" style="margin: 10px" type="button" name="book" class="u-border-none u-btn u-btn-round u-button-style u-radius-50 u-btn-1">
-            Book All
-        </button>
-    </div>
 
     <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-3919"><div class="u-align-left u-clearfix u-sheet u-sheet-1"></div></footer>
     <section class="u-backlink u-clearfix u-grey-80">
@@ -151,55 +155,22 @@
 
         var bookingInfo;
         var user;
-        var preferencesActHotel;
-        var preferencesRoom;
-        var total;
         // Login the user if it was logged in
         var userJSON = localStorage.getItem('userInfo');
         if (userJSON != null && !(userJSON === undefined) && !(userJSON === "")) {
             // now retrived user data, can use it
             user = JSON.parse(userJSON);
             console.log(user);
+            var tourReservationResponse = AjaxGet({
+                uId: user.uId
+            }, "reservation", "tourReservations");
+            constructTR(tourReservationResponse.data);
         }
         else {
             window.location.replace("Index.html");
         }
 
 
-        // Parse bookingInfo
-        var bookingInfoJSON = localStorage.getItem('bookingInfo');
-        if (bookingInfoJSON != null && !(bookingInfoJSON === undefined) && !(bookingInfoJSON === "")) {
-            // now retrived user data, can use it
-            bookingInfo = JSON.parse(bookingInfoJSON);
-            console.log(bookingInfo);
-        }
-        else {
-            window.location.replace("My-Tours.html");
-        }
-
-
-        // Parse preferences for act and hotel
-        var preferencesActHotelJSON = localStorage.getItem('preferencesActHotel');
-        if (preferencesActHotelJSON != null && !(preferencesActHotelJSON === undefined) && !(preferencesActHotelJSON === "")) {
-            // now retrived user data, can use it
-            preferencesActHotel = JSON.parse(preferencesActHotelJSON);
-            console.log(preferencesActHotel);
-        }
-        else {
-            window.location.replace("Search-Results-Act.html");
-        }
-
-        // Parse preferences for room
-        var preferencesRoomJSON = localStorage.getItem('preferencesRoom');
-        if (preferencesRoomJSON != null && !(preferencesRoomJSON === undefined) && !(preferencesRoomJSON === "")) {
-            // now retrived user data, can use it
-            preferencesRoom = JSON.parse(preferencesRoomJSON);
-            console.log(preferencesRoom);
-            total = processSummary(user, bookingInfo, preferencesActHotel, preferencesRoom);
-        }
-        else {
-            window.location.replace("Room.html");
-        }
 
         // Basic logout, need to include it in every navbar, or find a better way to do it
         $('#logout-btn').click((e) => {
@@ -224,113 +195,66 @@
             window.location.replace("Index.html");
         });
 
-        $('#book-btn').click((e) => {
-            payment(user, total);
-            reserve(true, user, bookingInfo, preferencesActHotel, preferencesRoom);
-            alert("Payment success");
-            //window.location.replace("Reservations.html");
-        });
-
-        $('#reserve-btn').click((e) => {
-            reserve(false, user, bookingInfo, preferencesActHotel, preferencesRoom);
-            alert("Reservation success");
-            //window.location.replace("Reservations.html");
-        });
-    });
-
-    function processSummary(user, bookingInfo, preferencesActHotel, preferencesRoom) {
-        $('#tour-name').html($('#tour-name').html() + bookingInfo.tourName);
-        $('#tour-price').html($('#tour-price').html() + bookingInfo.tourPrice);
-        $('#hotel-name').html($('#hotel-name').html() + preferencesActHotel.hotelName);
-        $('#num-people').html($('#num-people').html() + bookingInfo.numPeople);
-        var tourLength = ( ( Date.parse(bookingInfo.tourEndDate) - Date.parse(bookingInfo.tourStartDate) ) / (1000 * 3600 * 24) ) + 1;
-
-        $('#tour-length').html($('#tour-length').html() + tourLength + " Days");
-
-        $('#extra-activities').html($('#extra-activities').html() + "<ul>");
-        console.log(preferencesActHotel.activities.length);
-        for (let i = 0; i < preferencesActHotel.activities.length; i++) {
-            console.log("iter" + i);
-            $('#extra-activities').html($('#extra-activities').html() + "<li>" + preferencesActHotel.activities[i].activityName + ": "
-                + (preferencesActHotel.activities[i].ticketPrice * (100.0 - preferencesActHotel.activities[i].discountPercents) / 100.0) + "</li>");
-        }
-        $('#extra-activities').html($('#extra-activities').html() + "</ul>");
-
-
-        $('#rooms').html($('#rooms').html() + "<ul>");
-        console.log(preferencesRoom.rooms.length);
-        for (let i = 0; i < preferencesRoom.rooms.length; i++) {
-            console.log("iter" + i);
-            $('#rooms').html($('#rooms').html() + "<li>" + preferencesRoom.rooms[i].number + ": "
-                + preferencesRoom.rooms[i].priceDiscounted+ "</li>");
-        }
-        $('#rooms').html($('#rooms').html() + "</ul>");
         
-        var subTotal = bookingInfo.tourPrice;
-        for (let i = 0; i < preferencesActHotel.activities.length; i++) {
-            subTotal += preferencesActHotel.activities[i].ticketPrice * (100.0 - preferencesActHotel.activities[i].discountPercents) / 100.0;
-        }
-        for (let i = 0; i < preferencesRoom.rooms.length; i++) {
-            subTotal += preferencesRoom.rooms[i].priceDiscounted * tourLength;
-        }
-        var total = subTotal * bookingInfo.numPeople;
-
-        $('#sub-total').html($('#sub-total').html() + subTotal);
-        $('#total').html($('#total').html() + total);
-
-        var wallet = user.wallet;
-        $('#wallet').html($('#wallet').html() + wallet)
-        if (wallet < total) {
-            // insufficient wallet balance
-            $('#wallet').css('color', 'red');
-            $('#book-btn').prop('disabled', true);
-        }
-        return total;
+    });
+    
+    function constructTR(list) {
+        $('#table-tour-res').DataTable({
+            "language": {
+                "emptyTable": "You dont have any tour reservations"
+            },
+            data: list,
+            columns: [
+                {
+                    title: "#",
+                    data: "reserveId"
+                },
+                {
+                    title: "Reservation Start Date",
+                    data: "reserveStartDate"
+                },
+                {
+                    title: "Reservation End Date",
+                    data: "reserveEndDate"
+                },
+                {
+                    title: "# of People",
+                    data: "numReserving"
+                },
+                {
+                    title: "Tour Name",
+                    data: "tourName"
+                },
+                {
+                    title: "Price",
+                    data: "price"
+                },
+                {
+                    title: "Payment Made?",
+                    data: "isBooked"
+                },
+                {
+                    title: "Actions",
+                    data: null // TODO write a review button
+                }
+            ],
+            columnDefs: [
+                {
+                    "targets": -1,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return "<button class='btn btn-primary select-tour-res' value='" + data.reserveId + "'>Review Tour</button>";
+                    }
+                }
+            ]
+        });
     }
 
-    // do the payment if booking was clicked
-    function payment(userInfo, total) {
-        var paymentInfo = {
-            uId: userInfo.uId,
-            total: total
-        };
-        AjaxPut(paymentInfo, "booking", "payment");
+    function constructHR(list) {
+
     }
 
-    // insert into the database, send post requests. adjust is_booked accordingly
-    function reserve(isBooked, user, bookingInfo, preferencesActHotel, preferencesRoom) {
-        var tourReservationInfo = {
-            tourStartDate: bookingInfo.tourStartDate,
-            tourEndDate: bookingInfo.tourEndDate,
-            numPeople: bookingInfo.numPeople,
-            isBooked: isBooked,
-            uId: user.uId,
-            tourId: bookingInfo.tourId
-        };
-        var reserveIdResponse = AjaxPost(tourReservationInfo, "booking", "tourReservation");
-        console.log(reserveIdResponse);
-        var reserveId = reserveIdResponse.data;
+    function constructMA(list) {
 
-        for (let i = 0; i < preferencesRoom.rooms.length; i++) {
-            let hotelReservationInfo = {
-                tourStartDate: bookingInfo.tourStartDate,
-                tourEndDate: bookingInfo.tourEndDate,
-                numPeople: bookingInfo.numPeople,
-                isBooked: isBooked,
-                uId: user.uId,
-                roomId: preferencesRoom.rooms[i].roomId,
-                hotelId: preferencesActHotel.hotelId
-            };
-            AjaxPost(hotelReservationInfo, "booking", "hotelReservation");
-        }
-
-        for (let i = 0; i < preferencesActHotel.activities.length; i++) {
-            let markedActivityInfo = {
-                reserveId: reserveId,
-                activityId: preferencesActHotel.activities[i].activityId
-            };
-            AjaxPost(markedActivityInfo, "booking", "markedActivity");
-        }
     }
-
 </script>

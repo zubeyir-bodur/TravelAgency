@@ -39,9 +39,13 @@ namespace TravelAgencyAPI.Controllers
             {
                 // SQL Queries here
                 int maxId;
-                if (dbContext.TourReviews.Count() > 0)
+                string countQuery = "SELECT COUNT(*) FROM TourReview;";
+                string maxQuery = "SELECT MAX(review_id) FROM TourReview;";
+                Func<DbDataReader, int> mapInt = x => (int)x[0];
+                int count = Helper.RawSqlQuery<int>(countQuery, mapInt).SingleOrDefault();
+                if (count > 0)
                 {
-                    maxId = dbContext.TourReviews.Max(table => table.ReviewId);
+                    maxId = Helper.RawSqlQuery<int>(maxQuery, mapInt).SingleOrDefault();
                 }
                 else
                 {
@@ -93,9 +97,13 @@ namespace TravelAgencyAPI.Controllers
             {
                 // SQL Queries here
                 int maxId;
-                if (dbContext.GuideReviews.Count() > 0)
+                string countQuery = "SELECT COUNT(*) FROM GuideReview;";
+                string maxQuery = "SELECT MAX(review_id) FROM GuideReview;";
+                Func<DbDataReader, int> mapInt = x => (int)x[0];
+                int count = Helper.RawSqlQuery<int>(countQuery, mapInt).SingleOrDefault();
+                if (count > 0)
                 {
-                    maxId = dbContext.GuideReviews.Max(table => table.ReviewId);
+                    maxId = Helper.RawSqlQuery<int>(maxQuery, mapInt).SingleOrDefault();
                 }
                 else
                 {

@@ -329,7 +329,9 @@
     <Content Include="lib\jquery\src\var\toString.js" />
     <Content Include="lib\jquery\src\wrap.js" />
     <Content Include="Login.html" />
+    <Content Include="NotImplemented.html" />
     <Content Include="Payment.html" />
+    <Content Include="Reservations.html" />
     <Content Include="Review.html" />
     <Content Include="Rooms.html" />
     <Content Include="Sign-Up.html" />
@@ -337,7 +339,6 @@
     <Content Include="Tours.html" />
     <Content Include="Index.html" />
     <Content Include="Web.config" />
-    <Content Include="My-Reservations.html" />
     <Content Include="My-Tours.html" />
     <Content Include="Search-Results-Act.html" />
     <Content Include="Review-Tour.html" />
