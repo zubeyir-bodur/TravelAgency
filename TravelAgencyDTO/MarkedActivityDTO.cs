@@ -12,7 +12,7 @@ namespace TravelAgencyDTO
         public DateTime activityEndTime { get; set; }
         public int numReserving { get; set; }
         public string tourName { get; set; }
-        public int ticketPrice { get; set; }
+        public decimal ticketPrice { get; set; }
         public bool isBooked { get; set; }
     }
 }
