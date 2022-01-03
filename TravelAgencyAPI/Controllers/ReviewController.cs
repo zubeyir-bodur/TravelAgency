@@ -46,8 +46,8 @@ namespace TravelAgencyAPI.Controllers
                 Func<DbDataReader, TourDTO> map = x => new TourDTO
                 {
                     tourId = (int)x[0],
-                    tourName = (string)x[1],
-                    city = (string)x[2],
+                    tourName = (string)x[2],
+                    city = (string)x[1],
                     tourStartDate = (DateTime)x[3],
                     tourEndDate = (DateTime)x[4],
                     tourDescription = (string)x[5],
