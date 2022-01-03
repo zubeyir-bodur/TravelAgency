@@ -91,7 +91,9 @@
     <Content Include="css\Guides.css" />
     <Content Include="css\Home.css" />
     <Content Include="css\Login.css" />
+    <Content Include="css\MakeRes.css" />
     <Content Include="css\nicepage.css" />
+    <Content Include="css\PendingReservations.css" />
     <Content Include="css\Post-Template.css" />
     <Content Include="css\Review.css" />
     <Content Include="css\Sign-Up.css" />
@@ -329,14 +331,17 @@
     <Content Include="lib\jquery\src\var\toString.js" />
     <Content Include="lib\jquery\src\wrap.js" />
     <Content Include="Login.html" />
+    <Content Include="MakeRes.html" />
     <Content Include="NotImplemented.html" />
     <Content Include="Payment.html" />
+    <Content Include="PendingReservations.html" />
     <Content Include="Reservations.html" />
     <Content Include="Review.html" />
     <Content Include="Rooms.html" />
     <Content Include="Sign-Up.html" />
     <Content Include="Statistics.html" />
     <Content Include="Index.html" />
+    <Content Include="Tours.html" />
     <Content Include="Web.config" />
     <Content Include="My-Tours.html" />
     <Content Include="Search-Results-Act.html" />
