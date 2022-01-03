@@ -126,7 +126,7 @@ namespace TravelAgencyAPI.Controllers
         /// <param name="userInfo"></param>
         /// <returns></returns>
         [HttpGet("markedActivities")] // Please set the http request type, and http request name.
-        public IActionResult MarkedActivities(int tourId, int uId)
+        public IActionResult MarkedActivities(int reserveId, int uId)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -145,7 +145,7 @@ namespace TravelAgencyAPI.Controllers
                                         " FROM tourReservations JOIN marked_activity ON tourReservations.reserve_id = marked_activity.reserve_id " +
                                                               " JOIN Activity ON marked_activity.activity_id = Activity.activity_id " +
                                                               " LEFT JOIN Discount ON Activity.discount_id = Discount.discount_id " +
-                                        " WHERE tourReservations.tour_id = " + tourId + " ; ";
+                                        " WHERE tourReservations.reserve_id = " + reserveId + " ; ";
 
                 Func<DbDataReader, MarkedActivityDTO> map = x => new MarkedActivityDTO
                 {
@@ -154,9 +154,9 @@ namespace TravelAgencyAPI.Controllers
                     activityStartTime = (DateTime)x[2],
                     activityEndTime = (DateTime)x[3],
                     numReserving = (int)x[4],
-                    tourName = (string)x[4],
-                    ticketPrice = (int)x[5],
-                    isBooked = (bool)x[6]
+                    tourName = (string)x[5],
+                    ticketPrice = (decimal)x[6],
+                    isBooked = (bool)x[7]
                 };
                 var output = Helper.RawSqlQuery<MarkedActivityDTO>(hReservationQ, map).ToList();
                 // Send an HTTP response as data, if necessary

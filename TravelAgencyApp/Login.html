@@ -139,8 +139,13 @@
                 user.birthDate != null &&
                 user.type != null) {
                 console.log(user);
-                window.location.replace("My-Tours.html");
-                console.log("Welcome!" + user.firstName);
+                if (user.type === "customer") {
+                    window.location.replace("My-Tours.html");
+                    console.log("Welcome!" + user.firstName);
+                }
+                else {
+                    window.location.replace("NotImplemented.html");
+                }
             }
         }
         else {
