@@ -231,33 +231,181 @@ namespace TravelAgencyAPI.Controllers
         }
 
         /// <summary>
-        /// Display hotels
+        /// Make a payment.
+        /// No validation needed, frontend already knows if customer have enough balance or not
         /// </summary>
         /// <param name="paymentInfo"></param>
         /// <returns></returns>
-        [HttpPut("payment")] // need a custom modelBinder..., nope problem solved
+        [HttpPut("payment")]
         public IActionResult Payment(PaymentInfo paymentInfo)
         {
             ResponseModel response = new ResponseModel();
             try
             {
                 // SQL Queries here 
-                var customer = dbContext.Customers.FromSqlRaw("SELECT * FROM Customer WHERE UId = " + paymentInfo.uId + ";").ToList().FirstOrDefault();
-                string finalQuery = "SELECT * FROM Customer WHERE UId = " + paymentInfo.uId + ";";
-
-                dbContext.Database.ExecuteSqlInterpolated($"UPDATE Customer SET Customer.Wallet = Wallet - {paymentInfo.amount} WHERE Customer.UId = {paymentInfo.uId};");
-
-                Func<DbDataReader, PaymentInfo> map = x => new PaymentInfo
-                {
-                    paymentId = (int)x[0],
-                    uId = (int)x[1],
-                    amount = (int)x[2],
-                };
-
-                var payment = Helper.RawSqlQuery<PaymentInfo>(finalQuery, map);
+                dbContext.Database.ExecuteSqlInterpolated($"UPDATE Customer SET wallet = wallet - {paymentInfo.total} WHERE Customer.u_id = {paymentInfo.uId};");
 
                 // Send an HTTP response as data, if necessary
-                response.Data = payment;
+                response.Data = null;
+                response.HasError = false;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Insert necessary rows for a tour reservation, without activities
+        /// No validation needed, frontend already knows if customer have enough balance or not
+        /// </summary>
+        /// <param name="tourReservationInfo"></param>
+        /// <returns></returns>
+        [HttpPost("tourReservation")]
+        public IActionResult TourReservation(TourReservationInfo tourReservationInfo)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                int maxId;
+                string countQuery = "SELECT COUNT(*) FROM Reservation;";
+                string maxQuery = "SELECT MAX(reserve_id) FROM Reservation;";
+                Func<DbDataReader, int> mapInt = x => (int)x[0];
+                int count = Helper.RawSqlQuery<int>(countQuery, mapInt).SingleOrDefault();
+                if (count > 0)
+                {
+                    maxId = Helper.RawSqlQuery<int>(maxQuery, mapInt).SingleOrDefault();
+                }
+                else
+                {
+                    maxId = 0;
+                }
+                var newId = maxId + 1;
+                int tourReserveId = newId;
+                // todo find available id 
+                // SQL Queries here 
+                string queryR = "INSERT INTO " +
+                                                    " Reservation(reserve_id, reserve_start_date, " +
+                                                    " reserve_end_date, num_reserving, is_booked, u_id) " +
+                                                    " VALUES(" + tourReserveId + ", \'" +
+                                                                tourReservationInfo.tourStartDate.ToString("s").Substring(0, 10) + "\', \'" +
+                                                                tourReservationInfo.tourEndDate.ToString("s").Substring(0, 10) + "\', " +
+                                                                tourReservationInfo.numPeople + ", " +
+                                                                (tourReservationInfo.isBooked ? (1) : (0)) + ", " +
+                                                                tourReservationInfo.uId + ");";
+                string queryTR = "INSERT INTO " +
+                                                    " TourReservation(reserve_id, tour_id) " +
+                                                    " VALUES( " + tourReserveId + ", " +
+                                                                tourReservationInfo.tourId + ");";
+                dbContext.Database.ExecuteSqlRaw(queryR);
+                dbContext.Database.ExecuteSqlRaw(queryTR);
+
+                // Send the tourReserveId for marked activities
+                response.Data = tourReserveId;
+                response.HasError = false;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Insert necessary rows for a single hotel reservation, 
+        /// This method will be called inside a loop to insert all necessary rows for chosen rooms
+        /// </summary>
+        /// <param name="hotelReservationInfo"></param>
+        /// <returns></returns>
+        [HttpPost("hotelReservation")]
+        public IActionResult HotelReservation(HotelReservationInfo hotelReservationInfo)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                int maxId;
+                string countQuery = "SELECT COUNT(*) FROM Reservation;";
+                string maxQuery = "SELECT MAX(reserve_id) FROM Reservation;";
+                Func<DbDataReader, int> mapInt = x => (int)x[0];
+                int count = Helper.RawSqlQuery<int>(countQuery, mapInt).SingleOrDefault();
+                if (count > 0)
+                {
+                    maxId = Helper.RawSqlQuery<int>(maxQuery, mapInt).SingleOrDefault();
+                }
+                else
+                {
+                    maxId = 0;
+                }
+                var newId = maxId + 1;
+                int hotelReservationId = newId;
+                // SQL Queries here 
+                dbContext.Database.ExecuteSqlRaw("INSERT INTO " +
+                                                    " Reservation(reserve_id, reserve_start_date, " +
+                                                    " reserve_end_date, num_reserving, is_booked, u_id) " +
+                                                    " VALUES(" + hotelReservationId + ", \'" +
+                                                                hotelReservationInfo.tourStartDate.ToString("s").Substring(0, 10) + "\', \'" +
+                                                                hotelReservationInfo.tourEndDate.ToString("s").Substring(0, 10) + "\', " +
+                                                                hotelReservationInfo.numPeople + ", " +
+                                                                (hotelReservationInfo.isBooked ? (1) : (0)) + ", " +
+                                                                hotelReservationInfo.uId + ");");
+                dbContext.Database.ExecuteSqlRaw("INSERT INTO " +
+                                                    " HotelReservation(reserve_id, room_id, hotel_id) " +
+                                                    " VALUES(" + hotelReservationId + ", " +
+                                                                hotelReservationInfo.roomId + ", " +
+                                                                hotelReservationInfo.hotelId + ");");
+
+                // Send an HTTP response as data, if necessary
+                response.Data = null;
+                response.HasError = false;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Insert necessary rows to indicate a single activity user chose to participate
+        /// </summary>
+        /// <param name="markedActivityInfo"></param>
+        /// <returns></returns>
+        [HttpPost("markedActivity")]
+        public IActionResult MarkedActivity(MarkedActivityInfo markedActivityInfo)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // SQL Queries here 
+                dbContext.Database.ExecuteSqlRaw("INSERT INTO marked_activity(reserve_id, activity_id) " +
+                                                    " VALUES( " + markedActivityInfo.reserveId + ", " +
+                                                                markedActivityInfo.activityId + ");");
+
+                // Send an HTTP response as data, if necessary
+                response.Data = null;
+                response.HasError = false;
             }
             catch (Exception ex)
             {

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using TravelAgencyAPI.Utils;
@@ -185,9 +186,13 @@ namespace TravelAgencyAPI.Controllers
 
                 }
                 int maxId;
-                if (dbContext.Users.Count() > 0)
+                string countQuery = "SELECT COUNT(*) FROM Users;";
+                string maxQuery = "SELECT MAX(u_id) FROM Users;";
+                Func<DbDataReader, int> mapInt = x => (int)x[0];
+                int count = Helper.RawSqlQuery<int>(countQuery, mapInt).SingleOrDefault();
+                if (count > 0)
                 {
-                    maxId = dbContext.Users.Max(table => table.UId);
+                    maxId = Helper.RawSqlQuery<int>(maxQuery, mapInt).SingleOrDefault();
                 }
                 else {
                     maxId = 0;

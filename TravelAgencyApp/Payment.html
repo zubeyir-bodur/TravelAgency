@@ -22,7 +22,7 @@
                 "name": ""
         }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Search Results Act">
+    <meta property="og:title" content="Payment">
     <meta property="og:type" content="website">
 </head>
 <body class="u-body">
@@ -49,16 +49,7 @@
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="My-Tours.html" style="padding: 10px 20px;">Tours</a>
                         </li>
                         <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Guides</a>
-                        </li>
-                        <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">My Reservations</a>
-                        </li>
-                        <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review Tour</a>
-                        </li>
-                        <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review Guide</a>
+                            <a href="Reservations.html" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">My Reservations</a>
                         </li>
                         <li class="u-nav-item">
                             <a href="#" id="logout-btn" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
@@ -74,16 +65,7 @@
                                     <a class="u-button-style u-nav-link" href="My-Tours.html" style="padding: 10px 20px;">Tours</a>
                                 </li>
                                 <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Guides</a>
-                                </li>
-                                <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">My Reservations</a>
-                                </li>
-                                <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review Tour</a>
-                                </li>
-                                <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review Guide</a>
+                                    <a href="Reservations.html" class="u-button-style u-nav-link" style="padding: 10px 20px;">My Reservations</a>
                                 </li>
                                 <li class="u-nav-item">
                                     <a href="#" id="logout-btn-side" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
@@ -108,9 +90,11 @@
                 <p class="card-text" id="hotel-name"><b>Selected Hotel: </b></p>
                 <p class="card-text"><b>Selected Rooms (Number : Discounted Price per Day): </b></p>
                 <div id="rooms"></div>
+                <p class="card-text" id="tour-length"><b>Tour Length: </b></p>
                 <p class="card-text" id="sub-total"><b>Sub Total: </b></p>
                 <p class="card-text" id="num-people"><b>Number of People: </b></p>
                 <p class="card-text" id="total"><b>TOTAL: </b></p>
+                <p class="card-text" id="wallet" style="color:green;"><b>Your Balance: </b></p>
             </div>
         </div>
     </section>
@@ -151,6 +135,7 @@
         var user;
         var preferencesActHotel;
         var preferencesRoom;
+        var total;
         // Login the user if it was logged in
         var userJSON = localStorage.getItem('userInfo');
         if (userJSON != null && !(userJSON === undefined) && !(userJSON === "")) {
@@ -192,7 +177,7 @@
             // now retrived user data, can use it
             preferencesRoom = JSON.parse(preferencesRoomJSON);
             console.log(preferencesRoom);
-            processSummary(user, bookingInfo, preferencesActHotel, preferencesRoom);
+            total = processSummary(user, bookingInfo, preferencesActHotel, preferencesRoom);
         }
         else {
             window.location.replace("Room.html");
@@ -222,11 +207,16 @@
         });
 
         $('#book-btn').click((e) => {
-            // todo send a put request for payment if booking is pressed
+            payment(user, total);
+            reserve(true, user, bookingInfo, preferencesActHotel, preferencesRoom);
+            alert("Payment success");
+            //window.location.replace("Reservations.html");
         });
 
         $('#reserve-btn').click((e) => {
-            // todo send a post request for reservation if reservation is pressed
+            reserve(false, user, bookingInfo, preferencesActHotel, preferencesRoom);
+            alert("Reservation success");
+            //window.location.replace("Reservations.html");
         });
     });
 
@@ -235,6 +225,9 @@
         $('#tour-price').html($('#tour-price').html() + bookingInfo.tourPrice);
         $('#hotel-name').html($('#hotel-name').html() + preferencesActHotel.hotelName);
         $('#num-people').html($('#num-people').html() + bookingInfo.numPeople);
+        var tourLength = ( ( Date.parse(bookingInfo.tourEndDate) - Date.parse(bookingInfo.tourStartDate) ) / (1000 * 3600 * 24) ) + 1;
+
+        $('#tour-length').html($('#tour-length').html() + tourLength + " Days");
 
         $('#extra-activities').html($('#extra-activities').html() + "<ul>");
         console.log(preferencesActHotel.activities.length);
@@ -260,12 +253,66 @@
             subTotal += preferencesActHotel.activities[i].ticketPrice * (100.0 - preferencesActHotel.activities[i].discountPercents) / 100.0;
         }
         for (let i = 0; i < preferencesRoom.rooms.length; i++) {
-            subTotal += preferencesRoom.rooms[i].priceDiscounted;
+            subTotal += preferencesRoom.rooms[i].priceDiscounted * tourLength;
         }
         var total = subTotal * bookingInfo.numPeople;
 
         $('#sub-total').html($('#sub-total').html() + subTotal);
         $('#total').html($('#total').html() + total);
+
+        var wallet = user.wallet;
+        $('#wallet').html($('#wallet').html() + wallet)
+        if (wallet < total) {
+            // insufficient wallet balance
+            $('#wallet').css('color', 'red');
+            $('#book-btn').prop('disabled', true);
+        }
+        return total;
+    }
+
+    // do the payment if booking was clicked
+    function payment(userInfo, total) {
+        var paymentInfo = {
+            uId: userInfo.uId,
+            total: total
+        };
+        AjaxPut(paymentInfo, "booking", "payment");
+    }
+
+    // insert into the database, send post requests. adjust is_booked accordingly
+    function reserve(isBooked, user, bookingInfo, preferencesActHotel, preferencesRoom) {
+        var tourReservationInfo = {
+            tourStartDate: bookingInfo.tourStartDate,
+            tourEndDate: bookingInfo.tourEndDate,
+            numPeople: bookingInfo.numPeople,
+            isBooked: isBooked,
+            uId: user.uId,
+            tourId: bookingInfo.tourId
+        };
+        var reserveIdResponse = AjaxPost(tourReservationInfo, "booking", "tourReservation");
+        console.log(reserveIdResponse);
+        var reserveId = reserveIdResponse.data;
+
+        for (let i = 0; i < preferencesRoom.rooms.length; i++) {
+            let hotelReservationInfo = {
+                tourStartDate: bookingInfo.tourStartDate,
+                tourEndDate: bookingInfo.tourEndDate,
+                numPeople: bookingInfo.numPeople,
+                isBooked: isBooked,
+                uId: user.uId,
+                roomId: preferencesRoom.rooms[i].roomId,
+                hotelId: preferencesActHotel.hotelId
+            };
+            AjaxPost(hotelReservationInfo, "booking", "hotelReservation");
+        }
+
+        for (let i = 0; i < preferencesActHotel.activities.length; i++) {
+            let markedActivityInfo = {
+                reserveId: reserveId,
+                activityId: preferencesActHotel.activities[i].activityId
+            };
+            AjaxPost(markedActivityInfo, "booking", "markedActivity");
+        }
     }
 
 </script>

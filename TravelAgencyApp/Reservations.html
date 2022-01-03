@@ -3,10 +3,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Rooms">
+    <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="page_type" content="np-template-header-footer-from-plugin">
-    <title>Your Room Preferences</title>
+    <title>Your Reservations</title>
     <link rel="stylesheet" href="css/nicepage.css" media="screen">
     <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script class="u-script" type="text/javascript" src="js/nicepage.js" defer=""></script>
@@ -22,7 +22,7 @@
                 "name": ""
         }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Rooms">
+    <meta property="og:title" content="Payment">
     <meta property="og:type" content="website">
 </head>
 <body class="u-body">
@@ -49,7 +49,7 @@
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="My-Tours.html" style="padding: 10px 20px;">Tours</a>
                         </li>
                         <li class="u-nav-item">
-                            <a href="Reservations.html" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">My Reservations &Aacute; Reviewing</a>
+                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Reservations.html" style="padding: 10px 20px;">My Reservations &amp; Reviewing</a>
                         </li>
                         <li class="u-nav-item">
                             <a href="#" id="logout-btn" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
@@ -65,7 +65,7 @@
                                     <a class="u-button-style u-nav-link" href="My-Tours.html" style="padding: 10px 20px;">Tours</a>
                                 </li>
                                 <li class="u-nav-item">
-                                    <a href="Reservations.html" class="u-button-style u-nav-link" style="padding: 10px 20px;">My Reservations &Aacute; Review</a>
+                                    <a href="Reservations.html" class="u-button-style u-nav-link" style="padding: 10px 20px;">My Reservations</a>
                                 </li>
                                 <li class="u-nav-item">
                                     <a href="#" id="logout-btn-side" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
@@ -79,24 +79,41 @@
         </div>
     </header>
     <section>
-        <div>
-            <div class="alert alert-warning" role="alert" id="num-booking">
-                Number of people booking is : 
-            </div>
-            <div class="card-body">
-                <h3 class="text-center">Rooms for the Hotel Selected</h3>
-                <div class="table-responsive">
-                    <table id="table-rooms" class="table w-100">
-                    </table>
-                </div>
+        <!--Tour Reservation-->
+        <div class="card-body">
+            <h3 class="text-center">Your Tour Reservations</h3>
+            <div class="table-responsive">
+                <table id="table-tour-res" class="table w-100">
+                </table>
             </div>
         </div>
+        <br>
+        <!--Hotel Reservations-->
+        <div class="card-body">
+            <h3 class="text-center">Your Hotel Reservations</h3>
+            <div class="table-responsive">
+                <table id="table-hotel-res" class="table w-100">
+                </table>
+            </div>
+        </div>
+        <br>
+        <!--Marked Activity for selected Tour Reservation-->
+        <br>
+        <div id="list-tour-reservations" style="display:none">
+            <label for="tour-res-input">Tour Reservations</label>
+            <select id="tour-res-input"></select>
+        </div>
+        <br>
+        <div class="card-body">
+            <h3 class="text-center">Marked Activities for This Tour Reservation</h3>
+            <div class="table-responsive">
+                <table id="table-marked-activities" class="table w-100">
+                </table>
+            </div>
+        </div>
+        <!--Book button to convert them to bookings and payment, but this was not asked
+    For now, just list the reservations only-->
     </section>
-    <div class="card-body">
-        <button id="continue-btn" type="button" name="continue" class="u-border-none u-btn u-btn-round u-button-style u-radius-50 u-btn-1">
-            Review Your Purchase
-        </button>
-    </div>
 
     <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-3919"><div class="u-align-left u-clearfix u-sheet u-sheet-1"></div></footer>
     <section class="u-backlink u-clearfix u-grey-80">
@@ -124,46 +141,29 @@
 
         var bookingInfo;
         var user;
-        var preferencesActHotel;
         // Login the user if it was logged in
         var userJSON = localStorage.getItem('userInfo');
         if (userJSON != null && !(userJSON === undefined) && !(userJSON === "")) {
             // now retrived user data, can use it
             user = JSON.parse(userJSON);
             console.log(user);
+            var tourReservationResponse = AjaxGet({
+                uId: user.uId
+            }, "reservation", "tourReservations");
+            constructTR(tourReservationResponse.data);
+
+            var hotelReservationResponse = AjaxGet({
+                uId: user.uId
+            }, "reservation", "hotelReservations");
+
+            constructHR(hotelReservationResponse.data);
+
+            constructTList(tourReservationResponse.data);
+
+            bindClicks();
         }
         else {
             window.location.replace("Index.html");
-        }
-
-
-        // Parse bookingInfo
-        var bookingInfoJSON = localStorage.getItem('bookingInfo');
-        if (bookingInfoJSON != null && !(bookingInfoJSON === undefined) && !(bookingInfoJSON === "")) {
-            // now retrived user data, can use it
-            bookingInfo = JSON.parse(bookingInfoJSON);
-            console.log(bookingInfo);
-            $('#num-booking').text($('#num-booking').text() + bookingInfo.numPeople);
-        }
-        else {
-            window.location.replace("My-Tours.html");
-        }
-
-
-        // Parse preferences
-        var preferencesActHotelJSON = localStorage.getItem('preferencesActHotel');
-        if (preferencesActHotelJSON != null && !(preferencesActHotelJSON === undefined) && !(preferencesActHotelJSON === "")) {
-            // now retrived user data, can use it
-            preferencesActHotel = JSON.parse(preferencesActHotelJSON);
-            console.log(preferencesActHotel);
-            var roomsResponse = AjaxGet(
-                {
-                    hotelId: preferencesActHotel.hotelId
-                }, "booking", "rooms");
-            constructTableRooms(roomsResponse.data);
-        }
-        else {
-            window.location.replace("Search-Results-Act.html");
         }
 
         // Basic logout, need to include it in every navbar, or find a better way to do it
@@ -173,6 +173,7 @@
             localStorage.setItem('userInfo', "");
             localStorage.setItem('bookingInfo', "");
             localStorage.setItem('preferencesActHotel', "");
+            localStorage.setItem('preferencesRoom', "");
             // redirect to welcome page
             window.location.replace("Index.html");
         });
@@ -183,75 +184,52 @@
             localStorage.setItem('userInfo', "");
             localStorage.setItem('bookingInfo', "");
             localStorage.setItem('preferencesActHotel', "");
+            localStorage.setItem('preferencesRoom', "");
             // redirect to welcome page
             window.location.replace("Index.html");
         });
 
-        $('#continue-btn').click((e) => {
-            var rooms = [];
-            // 1 - read the hotel radio button
-            var checkboxes = jQuery("input[type='checkBox']");
-            var checkedCheckboxes = checkboxes.filter(":checked");
-            if (checkedCheckboxes.length == 0) {
-                alert("Please select at least one room to continue your reservation/ booking");
-                return;
-            }
-            for (let i = 0; i < checkedCheckboxes.length; i++) {
-                rooms.push({
-                    roomId: parseInt(checkedCheckboxes[i].value)
-            });
-            }
-
-            var datatableRooms = $('#table-rooms').DataTable().rows().data();
-            for (let i = 0; i < datatableRooms.length; i++) {
-                for (let j = 0; j < rooms.length; j++) {
-                    if (datatableRooms[i].roomId === rooms[j].roomId) {
-                        rooms[j].number = datatableRooms[i].number;
-                        rooms[j].priceDiscounted = datatableRooms[i].priceDiscounted;
-                    }
-                }
-            }
-
-            // 3 - set localstorage
-            var preferencesRoom = {
-                rooms: rooms
-            };
-            console.log(preferencesRoom);
-            localStorage.setItem('preferencesRoom', JSON.stringify(preferencesRoom));
-            window.location.replace('Payment.html');
-        });
+        
     });
-
-    function constructTableRooms(list) {
-        $('#table-rooms').DataTable({
+    
+    function constructTR(list) {
+        $('#table-tour-res').DataTable({
             "language": {
-                "emptyTable": "The hotel you have selected has no rooms available."
+                "emptyTable": "You dont have any tour reservations"
             },
             data: list,
             columns: [
                 {
                     title: "#",
-                    data: "roomId"
+                    data: "reserveId"
                 },
                 {
-                    title: "Room Number",
-                    data: "number"
+                    title: "Reservation Start Date",
+                    data: "reserveStartDate"
                 },
                 {
-                    title: "Room Size",
-                    data: "size"
+                    title: "Reservation End Date",
+                    data: "reserveEndDate"
                 },
                 {
-                    title: "Price per Day",
+                    title: "# of People",
+                    data: "numReserving"
+                },
+                {
+                    title: "Tour Name",
+                    data: "tourName"
+                },
+                {
+                    title: "Price (Discount Included)",
                     data: "price"
                 },
                 {
-                    title: "Discounted PPD",
-                    data: "priceDiscounted"
+                    title: "Payment Made?",
+                    data: "isBooked"
                 },
                 {
                     title: "Actions",
-                    data: null
+                    data: null // TODO write a review button
                 }
             ],
             columnDefs: [
@@ -259,11 +237,85 @@
                     "targets": -1,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return "<input class='form-check-input' type='checkbox' value='" + data.roomId + "' id='flexCheckDefault'>" +
-                            "<label class='form-check-label' for= 'flexCheckDefault' ></label > ";
+                        return "<button class='btn btn-primary select-tour-res' value='" + data.reserveId + "'>Review</button>";
                     }
                 }
             ]
         });
+    }
+
+    function constructHR(list) {
+        $('#table-hotel-res').DataTable({
+            "language": {
+                "emptyTable": "You dont have any hotel reservations"
+            },
+            data: list,
+            columns: [
+                {
+                    title: "#",
+                    data: "reserveId"
+                },
+                {
+                    title: "Reservation Start Date",
+                    data: "reserveStartDate"
+                },
+                {
+                    title: "Reservation End Date",
+                    data: "reserveEndDate"
+                },
+                {
+                    title: "# of People",
+                    data: "numReserving"
+                },
+                {
+                    title: "Hotel Name",
+                    data: "hotelName"
+                },
+                {
+                    title: "Room #",
+                    data: "roomNumber"
+                },
+                {
+                    title: "Price (Discount Included)",
+                    data: "price"
+                },
+                {
+                    title: "Payment Made?",
+                    data: "isBooked"
+                }
+            ]
+        });
+    }
+
+    function constructTList(list) {
+        $("#tour-res-input").empty();
+        for (var i = 0; i < list.length; i++) {
+            $("#tour-res-input").append($('<option>')
+                .val(list[i].tourId)
+                .text(list[i].reserveId + " - " + list[i].tourName));
+        }
+        $("#tour-res-input").append($('<option value="" selected disabled hidden>')
+            .text("Choose a tour"));
+        $("#list-tour-reservations").css("display", "block");
+    }
+
+    function bindClicks() {
+        var buttons = document.querySelectorAll(".select-tour-res");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', (e) => {
+                var reserveId = parseInt(buttons[i].getAttribute('value'));
+                var datatable = $('#table-results').DataTable().rows().data();
+                localStorage.setItem('reviewInfo', JSON.stringify({
+                    reserveId: reserveId,
+                }));
+                // 2 - redirect to proper page
+                window.location.replace("Review.html");
+            });
+        }
+    }
+
+
+    function constructMA(list) {
+
     }
 </script>

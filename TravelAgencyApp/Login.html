@@ -100,17 +100,6 @@
                     validate_me[i].classList.add('is-valid');
                 }
             }
-            /*
-            if (!$('#login-form')[0].checkValidity()) {
-                console.log("empty")
-                if ($("#username-5b0a").val() === "") {
-                    document.getElementById("username-5b0a").setCustomValidity("Please asdad out this field");
-                }
-                if ($("#password-5b0a").val() === "") {
-                    document.getElementById("password-5b0a").setCustomValidity("Please asdad out this field");
-                }
-            }
-            document.getElementById('login-form').reportValidity();*/
             var userInfo =
             {
                 username: $("#username-5b0a").val(),
@@ -121,10 +110,15 @@
             }
             var response = AjaxPost(userInfo, "account", "login");
             if (!response.hasError) {
-                console.log("Welcome " + response.data.firstName + " !");
-                localStorage.setItem('userInfo', JSON.stringify(response.data));
-                // Subject to change welcome page, open
-                window.location.replace("My-Tours.html");
+                if (response.data.type === "customer") {
+                    console.log("Welcome " + response.data.firstName + " !");
+                    localStorage.setItem('userInfo', JSON.stringify(response.data));
+                    // open welcome page if user is a customer
+                    window.location.replace("My-Tours.html");
+                }
+                else {
+                    window.location.replace("NotImplemented.html");
+                }
             }
             else if (response != null) {
                 $("#error-id").css('display', 'block');
