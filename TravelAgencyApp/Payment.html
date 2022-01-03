@@ -210,13 +210,19 @@
             payment(user, total);
             reserve(true, user, bookingInfo, preferencesActHotel, preferencesRoom);
             alert("Payment success");
-            //window.location.replace("Reservations.html");
+            localStorage.setItem('bookingInfo', "");
+            localStorage.setItem('preferencesActHotel', "");
+            localStorage.setItem('preferencesRoom', "");
+            window.location.replace("Reservations.html");
         });
 
         $('#reserve-btn').click((e) => {
             reserve(false, user, bookingInfo, preferencesActHotel, preferencesRoom);
             alert("Reservation success");
-            //window.location.replace("Reservations.html");
+            localStorage.setItem('bookingInfo', "");
+            localStorage.setItem('preferencesActHotel', "");
+            localStorage.setItem('preferencesRoom', "");
+            window.location.replace("Reservations.html");
         });
     });
 
