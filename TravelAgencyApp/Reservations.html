@@ -49,16 +49,7 @@
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="My-Tours.html" style="padding: 10px 20px;">Tours</a>
                         </li>
                         <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Guides</a>
-                        </li>
-                        <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Reservations.html" style="padding: 10px 20px;">My Reservations</a>
-                        </li>
-                        <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review Tour</a>
-                        </li>
-                        <li class="u-nav-item">
-                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Review Guide</a>
+                            <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Reservations.html" style="padding: 10px 20px;">My Reservations &amp; Reviewing</a>
                         </li>
                         <li class="u-nav-item">
                             <a href="#" id="logout-btn" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
@@ -74,16 +65,7 @@
                                     <a class="u-button-style u-nav-link" href="My-Tours.html" style="padding: 10px 20px;">Tours</a>
                                 </li>
                                 <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Guides</a>
-                                </li>
-                                <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">My Reservations</a>
-                                </li>
-                                <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review Tour</a>
-                                </li>
-                                <li class="u-nav-item">
-                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;">Review Guide</a>
+                                    <a href="Reservations.html" class="u-button-style u-nav-link" style="padding: 10px 20px;">My Reservations</a>
                                 </li>
                                 <li class="u-nav-item">
                                     <a href="#" id="logout-btn-side" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Log Out</a>
@@ -105,23 +87,27 @@
                 </table>
             </div>
         </div>
-        <div id="list-tour-reservations" style="display:none">
-            <label for="tour-res-input">Tour Reservations</label>
-            <select id="tour-res-input"></select>
-        </div>
-        <!--Marked Activity for selected Tour Reservation-->
-        <div class="card-body">
-            <h3 class="text-center">Marked Activities for This Tour</h3>
-            <div class="table-responsive">
-                <table id="table-marked-activities" class="table w-100">
-                </table>
-            </div>
-        </div>
+        <br>
         <!--Hotel Reservations-->
         <div class="card-body">
             <h3 class="text-center">Your Hotel Reservations</h3>
             <div class="table-responsive">
                 <table id="table-hotel-res" class="table w-100">
+                </table>
+            </div>
+        </div>
+        <br>
+        <!--Marked Activity for selected Tour Reservation-->
+        <br>
+        <div id="list-tour-reservations" style="display:none">
+            <label for="tour-res-input">Tour Reservations</label>
+            <select id="tour-res-input"></select>
+        </div>
+        <br>
+        <div class="card-body">
+            <h3 class="text-center">Marked Activities for This Tour Reservation</h3>
+            <div class="table-responsive">
+                <table id="table-marked-activities" class="table w-100">
                 </table>
             </div>
         </div>
@@ -165,12 +151,20 @@
                 uId: user.uId
             }, "reservation", "tourReservations");
             constructTR(tourReservationResponse.data);
+
+            var hotelReservationResponse = AjaxGet({
+                uId: user.uId
+            }, "reservation", "hotelReservations");
+
+            constructHR(hotelReservationResponse.data);
+
+            constructTList(tourReservationResponse.data);
+
+            bindClicks();
         }
         else {
             window.location.replace("Index.html");
         }
-
-
 
         // Basic logout, need to include it in every navbar, or find a better way to do it
         $('#logout-btn').click((e) => {
@@ -226,7 +220,7 @@
                     data: "tourName"
                 },
                 {
-                    title: "Price",
+                    title: "Price (Discount Included)",
                     data: "price"
                 },
                 {
@@ -243,7 +237,7 @@
                     "targets": -1,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return "<button class='btn btn-primary select-tour-res' value='" + data.reserveId + "'>Review Tour</button>";
+                        return "<button class='btn btn-primary select-tour-res' value='" + data.reserveId + "'>Review</button>";
                     }
                 }
             ]
@@ -251,8 +245,75 @@
     }
 
     function constructHR(list) {
-
+        $('#table-hotel-res').DataTable({
+            "language": {
+                "emptyTable": "You dont have any hotel reservations"
+            },
+            data: list,
+            columns: [
+                {
+                    title: "#",
+                    data: "reserveId"
+                },
+                {
+                    title: "Reservation Start Date",
+                    data: "reserveStartDate"
+                },
+                {
+                    title: "Reservation End Date",
+                    data: "reserveEndDate"
+                },
+                {
+                    title: "# of People",
+                    data: "numReserving"
+                },
+                {
+                    title: "Hotel Name",
+                    data: "hotelName"
+                },
+                {
+                    title: "Room #",
+                    data: "roomNumber"
+                },
+                {
+                    title: "Price (Discount Included)",
+                    data: "price"
+                },
+                {
+                    title: "Payment Made?",
+                    data: "isBooked"
+                }
+            ]
+        });
     }
+
+    function constructTList(list) {
+        $("#tour-res-input").empty();
+        for (var i = 0; i < list.length; i++) {
+            $("#tour-res-input").append($('<option>')
+                .val(list[i].tourId)
+                .text(list[i].reserveId + " - " + list[i].tourName));
+        }
+        $("#tour-res-input").append($('<option value="" selected disabled hidden>')
+            .text("Choose a tour"));
+        $("#list-tour-reservations").css("display", "block");
+    }
+
+    function bindClicks() {
+        var buttons = document.querySelectorAll(".select-tour-res");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', (e) => {
+                var reserveId = parseInt(buttons[i].getAttribute('value'));
+                var datatable = $('#table-results').DataTable().rows().data();
+                localStorage.setItem('reviewInfo', JSON.stringify({
+                    reserveId: reserveId,
+                }));
+                // 2 - redirect to proper page
+                window.location.replace("Review.html");
+            });
+        }
+    }
+
 
     function constructMA(list) {
 

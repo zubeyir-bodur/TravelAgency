@@ -34,7 +34,7 @@ namespace TravelAgencyAPI.Controllers
             try
             {
                 // SQL Queries here
-                string tReservationQ = "SELECT Reservation.reserve_id, reserve_start_date, reserve_end_date, num_reserving, tour_name, 	" +
+                string tReservationQ = "SELECT Reservation.reserve_id, reserve_start_date, reserve_end_date, num_reserving, tour_name, Tour.tour_id, 	" +
                                             "CASE WHEN percents IS NOT NULL THEN price*(100.0-percents)/100 " +
                                             "WHEN percents IS NULL THEN price END AS price, is_booked " +
                                       "FROM Reservation JOIN TourReservation ON Reservation.reserve_id = TourReservation.reserve_id " +
@@ -48,8 +48,9 @@ namespace TravelAgencyAPI.Controllers
                     reserveEndDate = (DateTime)x[2],
                     numReserving = (int)x[3],
                     tourName = (string)x[4],
-                    price = (decimal)x[5],
-                    isBooked = (bool)x[6],
+                    tourId = (int)x[5],
+                    price = (decimal)x[6],
+                    isBooked = (bool)x[7],
                 };
                 var output = Helper.RawSqlQuery<TourReservationDTO>(tReservationQ, map).ToList();
                 // Send an HTTP response as data, if necessary

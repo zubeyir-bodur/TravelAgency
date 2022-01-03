@@ -11,6 +11,7 @@ namespace TravelAgencyDTO
         public DateTime reserveEndDate { get; set; }
         public int numReserving { get; set; }
         public string tourName { get; set; }
+        public int tourId { get; set; }
         public decimal price { get; set; }
         public bool isBooked { get; set; }
     }
