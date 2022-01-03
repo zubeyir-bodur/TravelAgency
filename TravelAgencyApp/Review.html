@@ -158,21 +158,65 @@
         // parse reviewInfo
         var reviewInfo;
         var reviewInfoJSON = localStorage.getItem('reviewInfo');
+        var tour;
+        var guide;
         if (reviewInfoJSON != null && !(reviewInfoJSON === undefined) && !(reviewInfoJSON === "")) {
             // now retrived user data, can use it
             reviewInfo = JSON.parse(reviewInfoJSON);
             console.log(reviewInfo);
             var tourResponse = AjaxGet(reviewInfo, "review", "tourReserveToTour");
             var guideResponse = AjaxGet(reviewInfo, "review", "tourReserveToGuide");
+            tour = tourResponse.data;
+            guide = guideResponse.data;
             console.log(tourResponse.data);
             console.log(guideResponse.data);
             $('#tour-name').html($('#tour-name').html() + tourResponse.data.tourName);
-            $('#guide-full-name').html($('#guide-full-name').html() + guideResponse.data.firstName + guideResponse.data.lastName);
+            $('#guide-full-name').html($('#guide-full-name').html() + guideResponse.data.firstName + " " +  guideResponse.data.lastName);
         }
         else {
             window.location.replace("Reservations.html");
         }
 
+        $('#review-form').submit((e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            var form = document.getElementById('review-form');
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+            }
+            else {
+                form.classList.remove('was-validated');
+                var validate_me = document.querySelectorAll('.validate-me');
+                for (var i = 0; i < validate_me.length; i++) {
+                    validate_me[i].classList.add('is-valid');
+                }
+                console.log("valid");
+                console.log(tour);
+                console.log(guide);
+                var tourReview = {
+                    id: tour.tourId,
+                    stars: parseInt($('#tour-stars').val()),
+                    comment: $('#tour-comment').val(),
+                    entryDate: new Date().toISOString(),
+                    uId: user.uId
+                };
+                var guideReview = {
+                    id: guide.uId,
+                    stars: parseInt($('#guide-stars').val()),
+                    comment: $('#guide-comment').val(),
+                    entryDate: new Date().toISOString(),
+                    uId: user.uId
+                };
+                AjaxPost(tourReview, "review", "tourReview");
+                AjaxPost(guideReview, "review", "guideReview");
+                alert('Your reviews have been submitted');
+                window.location.replace("My-Tours.html");
+            }
+        });
+
+        $('#submit-btn').click((e) => {
+            $("#review-form").submit();
+        });
 
         // Basic logout, need to include it in every navbar, or find a better way to do it
         $('#logout-btn').click((e) => {

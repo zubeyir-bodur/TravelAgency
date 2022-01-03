@@ -118,15 +118,15 @@ namespace TravelAgencyAPI.Controllers
         /// <param name="tourId"></param>
         /// <returns></returns>
         [HttpPost("tourReview")] // Please set the http request type, and http request name.
-        public IActionResult AddTourReview(int tourId)
+        public IActionResult AddTourReview(ReviewInput tourReviewInput)
         {
             ResponseModel response = new ResponseModel();
             try
             {
                 // SQL Queries here
                 int maxId;
-                string countQuery = "SELECT COUNT(*) FROM TourReview;";
-                string maxQuery = "SELECT MAX(review_id) FROM TourReview;";
+                string countQuery = "SELECT COUNT(*) FROM Review;";
+                string maxQuery = "SELECT MAX(review_id) FROM Review;";
                 Func<DbDataReader, int> mapInt = x => (int)x[0];
                 int count = Helper.RawSqlQuery<int>(countQuery, mapInt).SingleOrDefault();
                 if (count > 0)
@@ -139,20 +139,11 @@ namespace TravelAgencyAPI.Controllers
                 }
                 var newId = maxId + 1;
 
-                var tour = dbContext.Tours.FromSqlRaw("SELECT * FROM Tour WHERE Tour_Id = " + tourId + ";").ToList().FirstOrDefault();
-                string finalQuery = "SELECT * FROM Tour WHERE tour_id = " + tourId + ";";
-                Func<DbDataReader, TourRating> map = x => new TourRating
-                {
-                    tourId = (int)x[0],
-                    tourName = (string)x[1],
-                    avgStars = (int)x[2],
-                };
-                var tourRatings = Helper.RawSqlQuery<TourRating>(finalQuery, map);
-
-                dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO TourReviews VALUES({newId}, {tourId});");
+                dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Review VALUES({newId}, {tourReviewInput.comment}, \'{tourReviewInput.entryDate}\', {tourReviewInput.stars}, {tourReviewInput.uId});");
+                dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO TourReview VALUES({newId}, {tourReviewInput.id});");
 
                 // Send an HTTP response as data, if necessary
-                response.Data = tourRatings;
+                response.Data = null;
 
             }
             catch (Exception ex)
@@ -176,15 +167,15 @@ namespace TravelAgencyAPI.Controllers
         /// <param name="uId"></param>
         /// <returns></returns>
         [HttpPost("guideReview")] // Please set the http request type, and http request name.
-        public IActionResult AddGuideReview(int uId)
+        public IActionResult AddGuideReview(ReviewInput guideReviewInput)
         {
             ResponseModel response = new ResponseModel();
             try
             {
                 // SQL Queries here
                 int maxId;
-                string countQuery = "SELECT COUNT(*) FROM GuideReview;";
-                string maxQuery = "SELECT MAX(review_id) FROM GuideReview;";
+                string countQuery = "SELECT COUNT(*) FROM Review;";
+                string maxQuery = "SELECT MAX(review_id) FROM Review;";
                 Func<DbDataReader, int> mapInt = x => (int)x[0];
                 int count = Helper.RawSqlQuery<int>(countQuery, mapInt).SingleOrDefault();
                 if (count > 0)
@@ -197,21 +188,11 @@ namespace TravelAgencyAPI.Controllers
                 }
                 var newId = maxId + 1;
 
-                var guide = dbContext.Guides.FromSqlRaw("SELECT * FROM Guide WHERE UId = " + uId + ";").ToList().FirstOrDefault();
-                string finalQuery = "SELECT * FROM Guide WHERE UId = " + uId + ";";
-                Func<DbDataReader, GuideRating> map = x => new GuideRating
-                {
-                    uId = (int)x[0],
-                    firstName = (string)x[1],
-                    lastName = (string)x[2],
-                    avgStars = (int)x[3],
-                };
-                var guideRatings = Helper.RawSqlQuery<GuideRating>(finalQuery, map);
-
-                dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO GuideReviews VALUES({newId}, {uId});");
+                dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO Review VALUES({newId}, {guideReviewInput.comment}, \'{guideReviewInput.entryDate}\', {guideReviewInput.stars}, {guideReviewInput.uId});");
+                dbContext.Database.ExecuteSqlInterpolated($"INSERT INTO GuideReview VALUES({newId}, {guideReviewInput.id});");
 
                 // Send an HTTP response as data, if necessary
-                response.Data = guideRatings;
+                response.Data = null;
             }
             catch (Exception ex)
             {
