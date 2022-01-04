@@ -168,9 +168,10 @@
 
         $('#show-btn').click((e) => {
             var selectedIndex = parseInt($('#tour-res-input').prop('selectedIndex'));
-            if (selectedIndex == $('#tour-res-input').prop('length') - 1)
+            if (selectedIndex >= $('#tour-res-input').prop('length') - 1)
                 return;
-            var selectedReserveId = parseInt($('#tour-res-input')[selectedIndex].value);
+            console.log(selectedIndex);
+            var selectedReserveId = parseInt(document.getElementById('tour-res-input')[selectedIndex].value);
             var markedActivitiesResponse = AjaxGet({
                 uId: user.uId,
                 reserveId: selectedReserveId
@@ -304,7 +305,7 @@
         $("#tour-res-input").empty();
         for (var i = 0; i < list.length; i++) {
             $("#tour-res-input").append($('<option>')
-                .val(list[i].tourId)
+                .val(list[i].reserveId)
                 .text(list[i].reserveId + " - " + list[i].tourName));
         }
         $("#tour-res-input").append($('<option value="" selected disabled hidden>')
