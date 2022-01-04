@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -35,20 +36,23 @@ namespace TravelAgencyAPI.Controllers
             try
             {
 
-                string finalQuery = "SELECT tour_id, tour_name, city, tour_start_date, tour_end_date, tour_description, price, percents " +
-                    "FROM Tour LEFT JOIN Discount ON Discount.discount_id = Tour.discount_id " +
-                    "WHERE tour_id IN " +
-                    "       (SELECT tour_id FROM assign_guide " +
-                    "       WHERE assign_status IS NOT NULL AND assign_status<> 'ACCEPTED'); ";
+                string finalQuery = "SELECT tour_id, city, tour_name, tour_start_date, tour_description, price, tour_end_date, percents " +
+                    "FROM ( " +
+                    "(SELECT * " +
+                    "FROM Tour) EXCEPT " +
+                    "(SELECT Tour.tour_id, city, tour_name, tour_start_date, tour_description, price, discount_id,tour_end_date, discount_start_date " +
+                    "FROM Tour JOIN assign_guide ON Tour.tour_id=assign_guide.tour_id " +
+                    "WHERE assign_guide.assign_status ='ACCEPTED') " +
+                    ") as t1 LEFT JOIN Discount ON t1.discount_id=Discount.discount_id;";
                 Func<DbDataReader, TourDTO> map = x => new TourDTO
                 {
                     tourId = (int)x[0],
-                    tourName = (string)x[1],
-                    city = (string)x[2],
+                    tourName = (string)x[2],
+                    city = (string)x[1],
                     tourStartDate = (DateTime)x[3],
-                    tourEndDate = (DateTime)x[4],
-                    tourDescription = (string)x[5],
-                    price = (decimal)x[6],
+                    tourEndDate = (DateTime)x[6],
+                    tourDescription = (string)x[4],
+                    price = (decimal)x[5],
                     discountPercents = (x[7] != DBNull.Value)?((int)x[7]):0 // if percents is null, then the discount applied is zero percent
                 };
                 //var tours = dbContext.Tours.FromSqlRaw(finalQuery).ToList();
