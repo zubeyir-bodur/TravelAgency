@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TravelAgencyDTO
 {
-    public class TourReservationDTO
+    public class AssignGuideDTO
     {
         public int tourId { get; set; }
         public int? guideUId { get; set; }

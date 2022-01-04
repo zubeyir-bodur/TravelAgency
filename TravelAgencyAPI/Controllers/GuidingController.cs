@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using TravelAgencyAPI.Utils;
+using TravelAgencyDTO;
 using TravelAgencyEntity;
 
 namespace TravelAgencyAPI.Controllers
@@ -25,13 +28,18 @@ namespace TravelAgencyAPI.Controllers
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
-        [HttpPost("toursWithoutGuide")]
+        [HttpGet("toursWithoutGuide")]
         public IActionResult ToursWithoutGuide()
         {
             ResponseModel response = new ResponseModel();
             try
             {
-                string finalQuery = "SELECT tour_id, tour_name, city, tour_start_date, tour_end_date, tour_description, price, percents FROM Tour WHERE tour_id NOT IN (SELECT tour_id FROM AssignGuide WHERE assign_status != null AND assign_status != "" ); ""
+
+                string finalQuery = "SELECT tour_id, tour_name, city, tour_start_date, tour_end_date, tour_description, price, percents " +
+                    "FROM Tour LEFT JOIN Discount ON Discount.discount_id = Tour.discount_id " +
+                    "WHERE tour_id IN " +
+                    "       (SELECT tour_id FROM assign_guide " +
+                    "       WHERE assign_status IS NOT NULL AND assign_status<> 'ACCEPTED'); ";
                 Func<DbDataReader, TourDTO> map = x => new TourDTO
                 {
                     tourId = (int)x[0],
@@ -73,7 +81,7 @@ namespace TravelAgencyAPI.Controllers
         /// <param name="guideUId"></param>
         /// <returns></returns>
         [HttpGet("assignGuideForTour")]
-        public IActionResult AssignGuideForTour(int tourId, int guideUId)
+        public IActionResult AssignGuideForTour(int tourId, int guideUId, int agentUId)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -123,7 +131,7 @@ namespace TravelAgencyAPI.Controllers
             ResponseModel response = new ResponseModel();
             try
             {
-                string finalQuery = "SELECT tour_id, tour_name, city, tour_start_date, tour_end_date, tour_description, price, percents FROM Tour WHERE tour_id IN (SELECT tour_id FROM AssignGuide WHERE guide_uid = " + uid + "); ";
+                string finalQuery = "SELECT tour_id, tour_name, city, tour_start_date, tour_end_date, tour_description, price, percents FROM Tour WHERE tour_id IN (SELECT tour_id FROM AssignGuide WHERE guide_uid = " + uId + "); ";
                 Func<DbDataReader, TourDTO> map = x => new TourDTO
                 {
                     tourId = (int)x[0],

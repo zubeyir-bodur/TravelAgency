@@ -218,5 +218,48 @@ namespace TravelAgencyAPI.Controllers
             // Return the HTTP response
             return Ok(response);
         }
+
+
+
+        /// <summary>
+        /// An example http request
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tourReservationsAll")]
+        public IActionResult TourReservationsAll()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // SQL Queries here
+                string tReservationQ = "SELECT Reservation.reserve_id, reserve_start_date, reserve_end_date, num_reserving, tour_name, u_id, Tour.tour_id, " +
+                                            "CASE WHEN percents IS NOT NULL THEN price*(100.0-percents)/100 " +
+                                            "WHEN percents IS NULL THEN price END AS price, is_booked " +
+                                      "FROM Reservation JOIN TourReservation ON Reservation.reserve_id = TourReservation.reserve_id " +
+                                                                "JOIN Tour ON Tour.tour_id = TourReservation.tour_id " +
+                                                                "LEFT JOIN Discount ON Tour.discount_id=Discount.discount_id; ";
+
+                Func<DbDataReader, ReservationsDTO> map = x => new ReservationsDTO
+                {
+                    reserve_id = (int)x[0],
+                    u_id = (int)x[5]
+                };
+                var output = Helper.RawSqlQuery<ReservationsDTO>(tReservationQ, map).ToList();
+                // Send an HTTP response as data, if necessary
+                response.Data = output;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
     }
 }

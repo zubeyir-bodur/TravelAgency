@@ -6,7 +6,7 @@
     <meta name="keywords" content="INTUITIVE">
     <meta name="description" content="">
     <meta name="page_type" content="np-template-header-footer-from-plugin">
-    <title></titleZ>Tours</title>
+    <title>Tours</title>
     <link rel="stylesheet" href="css/nicepage.css" media="screen">
     <link rel="stylesheet" href="css/My-Tours.css" media="screen">
     <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -54,6 +54,9 @@
                         <li class="u-nav-item">
                             <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="MakeRes.html" style="padding: 10px 20px;">Make Reservations</a>
                         </li>
+                        <li class="u-nav-item">
+                            <a id="logout-btn" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" style="padding: 10px 20px;">Logout</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="u-custom-menu u-nav-container-collapse">
@@ -69,6 +72,9 @@
                                 </li>
                                 <li class="u-nav-item">
                                     <a class="u-button-style u-nav-link" href="MakeRes.html" style="padding: 10px 20px;">Make Reservations</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a id="logout-btn-side" class="u-button-style u-nav-link" href="MakeRes.html" style="padding: 10px 20px;">Logout</a>
                                 </li>
                             </ul>
                         </div>
@@ -87,6 +93,7 @@
     </section>
     <div class="card-body">
         <div class="table-responsive">
+            <h5 class="text-center">Tours Without an Assigned Guide</h5>
             <table id="table-results" class="table w-100">
             </table>
         </div>
@@ -116,6 +123,7 @@
 <script>
     $(document).ready(() => {
 
+
         var numBooking;
         // Login the user if it was logged in
         var userJSON = localStorage.getItem('userInfo');
@@ -123,11 +131,14 @@
             // now retrived user data, can use it
             var user = JSON.parse(userJSON);
             //alert("Welcome " + user.type + " " + user.firstName + " !");
-            constructTable([]);
+            var response = AjaxGet(null, "guiding", "toursWithoutGuide");
+            console.log(response);
+            constructTable(response.data);
         }
         else {
             window.location.replace("Index.html");
         }
+
 
         // Basic logout, need to include it in every navbar, or find a better way to do it
         $('#logout-btn').click((e) => {
@@ -147,87 +158,11 @@
         });
 
         // List all available tours and apply filters
-        $("#search-btn").click((e) => {
+        
 
-            // Reset the contents of the error message
-            $("#error-id").css('display', 'hidden');
-            $('#error-id').text('');
-            $("#search-form").submit();
-        });
+        
 
-        // Execute a function when the user releases enter key
-        var arr = $('.u-input');
-        Array.prototype.forEach.call(arr, i => {
-            i.addEventListener("keyup", function (event) {
-                // Number 13 is the "Enter" key on the keyboard
-                if (event.keyCode === 13) {
-                    // Cancel the default action, if needed
-                    event.preventDefault();
-                    // Trigger the button element with a click
-                    $("#search-btn").click();
-                }
-            });
-        });
-
-        $('#search-form').submit((e) => {
-            var city = $("#city").val();
-            var dateRangeStart = $("#dateRangeStart").val();
-            var dateRangeEnd = $("#dateRangeEnd").val();
-            var priceRangeStart = $("#priceRangeStart").val();
-            var priceRangeEnd = $("#priceRangeEnd").val();
-            var numPeople = $("#numPeople").val();
-
-            if (dateRangeStart === "") {
-                dateRangeStart = new Date(0);
-            }
-
-            if (dateRangeEnd === "") {
-                dateRangeEnd = new Date(86400000000000);
-            }
-
-            if (priceRangeStart === "") {
-                priceRangeStart = 0.0;
-            }
-
-            if (priceRangeEnd === "") {
-                priceRangeEnd = 0.0;
-            }
-
-            if (numPeople === "") {
-                $("#error-id").css('display', 'block');
-                $('#error-id').text("Please indicate the numper of people booking");
-                return;
-            }
-
-            priceRangeStart = parseFloat(priceRangeStart);
-            priceRangeEnd = parseFloat(priceRangeEnd);
-            numPeople = parseInt(numPeople);
-
-            var tourFilter =
-            {
-                city: city,
-                dateRangeStart: dateRangeStart,
-                dateRangeEnd: dateRangeEnd,
-                priceRangeStart: priceRangeStart,
-                priceRangeEnd: priceRangeEnd,
-                numPeople: numPeople
-            };
-            //todo var response = AjaxPost(tourFilter, "booking", "tours");
-            if (!response.hasError) {
-                var datatable = $('#table-results').DataTable();
-                datatable.clear().rows.add(response.data).draw();
-                numBooking = parseInt(numPeople);
-                bindClicks(numBooking);
-            }
-            else if (response != null) {
-                $("#error-id").css('display', 'block');
-                $('#error-id').text(response.errorMessage);
-            }
-            else {
-                $("#error-id").css('display', 'block');
-                $('#error-id').text("Something unexpected occurred :/");
-            }
-        });
+     
 
     });
 

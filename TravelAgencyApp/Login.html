@@ -149,6 +149,10 @@
                     window.location.replace("My-Tours.html");
                     console.log("Welcome!" + user.firstName);
                 }
+                else if (user.type === "agent") {
+                    window.location.replace("Tours.html");
+                    console.log("Welcome!" + user.firstName);
+                }
                 else {
                     window.location.replace("NotImplemented.html");
                 }
