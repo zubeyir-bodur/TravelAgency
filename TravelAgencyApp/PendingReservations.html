@@ -254,6 +254,14 @@
                     data: "u_id"
                 },
                 {
+                    title: "Name",
+                    data: "first_name"
+                },
+                {
+                    title: "Last Name",
+                    data: "last_name"
+                },
+                {
                     title: "actions",
                     data: null
                 }
@@ -263,7 +271,8 @@
                     "targets": -1,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return "<button class='btn btn-primary select-tour' value='" + data.reserve_id + "'>Accept</button>";
+                        return "<button class='btn btn-success select-tour' value='" + data.reserve_id + "'>Accept</button>" +
+                            "<button class='btn btn-danger select-tour' value='" + data.reserve_id + "'>Decline</button>";
                     }
                 }
             ]
