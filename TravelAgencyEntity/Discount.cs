@@ -16,7 +16,6 @@ namespace TravelAgencyEntity
 
         public int DiscountId { get; set; }
         public int? Percents { get; set; }
-        public string DiscountType { get; set; }
         public int? DiscountDays { get; set; }
 
         public virtual ICollection<Activity> Activities { get; set; }

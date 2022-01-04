@@ -225,11 +225,6 @@ namespace TravelAgencyEntity
 
                 entity.Property(e => e.DiscountDays).HasColumnName("discount_days");
 
-                entity.Property(e => e.DiscountType)
-                    .HasMaxLength(16)
-                    .IsUnicode(false)
-                    .HasColumnName("discount_type");
-
                 entity.Property(e => e.Percents).HasColumnName("percents");
             });
 
