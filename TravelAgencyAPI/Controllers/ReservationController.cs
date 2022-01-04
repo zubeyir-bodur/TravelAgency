@@ -232,17 +232,21 @@ namespace TravelAgencyAPI.Controllers
             try
             {
                 // SQL Queries here
-                string tReservationQ = "SELECT Reservation.reserve_id, reserve_start_date, reserve_end_date, num_reserving, tour_name, u_id, Tour.tour_id, " +
-                                            "CASE WHEN percents IS NOT NULL THEN price*(100.0-percents)/100 " +
-                                            "WHEN percents IS NULL THEN price END AS price, is_booked " +
-                                      "FROM Reservation JOIN TourReservation ON Reservation.reserve_id = TourReservation.reserve_id " +
-                                                                "JOIN Tour ON Tour.tour_id = TourReservation.tour_id " +
-                                                                "LEFT JOIN Discount ON Tour.discount_id=Discount.discount_id; ";
+                string tReservationQ = "SELECT Reservation.reserve_id, reserve_start_date, reserve_end_date, num_reserving, tour_name, Users.u_id, first_name, last_name, Tour.tour_id, " +
+                                       "CASE WHEN percents IS NOT NULL THEN price*(100.0-percents)/100 " +
+                                       "WHEN percents IS NULL THEN price END AS price, is_booked " +
+                                       "FROM Reservation JOIN TourReservation ON Reservation.reserve_id = TourReservation.reserve_id " +
+                                       "JOIN Tour ON Tour.tour_id = TourReservation.tour_id " +
+                                       "JOIN Users ON Reservation.u_id = Users.u_id " +
+                                       "JOIN Customer ON Customer.u_id = Reservation.u_id " +
+                                       "LEFT JOIN Discount ON Tour.discount_id=Discount.discount_id; ";
 
                 Func<DbDataReader, ReservationsDTO> map = x => new ReservationsDTO
                 {
                     reserve_id = (int)x[0],
-                    u_id = (int)x[5]
+                    u_id = (int)x[5],
+                    first_name = (string)x[6],
+                    last_name = (string)x[7],
                 };
                 var output = Helper.RawSqlQuery<ReservationsDTO>(tReservationQ, map).ToList();
                 // Send an HTTP response as data, if necessary
