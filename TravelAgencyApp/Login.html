@@ -116,8 +116,14 @@
                     // open welcome page if user is a customer
                     window.location.replace("My-Tours.html");
                 }
+                if (response.data.type === "agent") {
+                    console.log("Welcome " + response.data.firstName + " !");
+                    localStorage.setItem('userInfo', JSON.stringify(response.data));
+                    // open welcome page if user is an agent
+                    window.location.replace("Tours.html");
+                }
                 else {
-                    window.location.replace("NotImplemented.html");
+                    // Go to guides page
                 }
             }
             else if (response != null) {
@@ -141,6 +147,10 @@
                 console.log(user);
                 if (user.type === "customer") {
                     window.location.replace("My-Tours.html");
+                    console.log("Welcome!" + user.firstName);
+                }
+                else if (user.type === "agent") {
+                    window.location.replace("Tours.html");
                     console.log("Welcome!" + user.firstName);
                 }
                 else {

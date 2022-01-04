@@ -175,5 +175,91 @@ namespace TravelAgencyAPI.Controllers
             // Return the HTTP response
             return Ok(response);
         }
+
+        /// <summary>
+        /// An example http request
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <returns></returns>
+        [HttpGet("customer")] // Please set the http request type, and http request name.
+        public IActionResult Action()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // SQL Queries here
+
+                // If you want to send an error to the frontend,
+                // you can set response.HasError = true
+                // set a ErrorMessage and just return Ok(response)
+                string query = "select Users.u_id, first_name, last_name from Users join Customer " +
+                    " ON Customer.u_id=Users.u_id where Users.u_id in (select  u_id from Customer); ";
+                Func<DbDataReader, CustomerDTO> map = x => new CustomerDTO
+                {
+                    u_id = (int)x[0],
+                    first_name = (string)x[1],
+                    last_name = (string)x[2],
+                };
+                var tours = Helper.RawSqlQuery<CustomerDTO>(query, map).ToList();
+
+                // Send an HTTP response as data, if necessary
+                response.Data = tours;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
+
+
+
+        /// <summary>
+        /// An example http request
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tourReservationsAll")]
+        public IActionResult TourReservationsAll()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                // SQL Queries here
+                string tReservationQ = "SELECT Reservation.reserve_id, reserve_start_date, reserve_end_date, num_reserving, tour_name, u_id, Tour.tour_id, " +
+                                            "CASE WHEN percents IS NOT NULL THEN price*(100.0-percents)/100 " +
+                                            "WHEN percents IS NULL THEN price END AS price, is_booked " +
+                                      "FROM Reservation JOIN TourReservation ON Reservation.reserve_id = TourReservation.reserve_id " +
+                                                                "JOIN Tour ON Tour.tour_id = TourReservation.tour_id " +
+                                                                "LEFT JOIN Discount ON Tour.discount_id=Discount.discount_id; ";
+
+                Func<DbDataReader, ReservationsDTO> map = x => new ReservationsDTO
+                {
+                    reserve_id = (int)x[0],
+                    u_id = (int)x[5]
+                };
+                var output = Helper.RawSqlQuery<ReservationsDTO>(tReservationQ, map).ToList();
+                // Send an HTTP response as data, if necessary
+                response.Data = output;
+            }
+            catch (Exception ex)
+            {
+                // Catch SQL Exceptions, and send them to frontend
+                response.HasError = true;
+                response.ErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    response.ErrorMessage += ": " + ex.InnerException.Message;
+                }
+            }
+            // Return the HTTP response
+            return Ok(response);
+        }
     }
 }
